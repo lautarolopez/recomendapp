@@ -71,6 +71,24 @@ function SignIn(props) {
 						Sign in
           			</Button>
 					<Button
+					  type="submit"
+					  fullWidth
+					  variant="contained"
+					  color="primary"
+					  onClick={loginWithGoogle}
+					  className={classes.submit}>
+					  Sign In with Google
+					</Button>
+					<Button
+					  type="submit"
+					  fullWidth
+					  variant="contained"
+					  color="primary"
+					  onClick={loginWithFacebook}
+					  className={classes.submit}>
+					  Sign In with Facebook
+					</Button>
+					<Button
 						type="submit"
 						fullWidth
 						variant="contained"
@@ -88,6 +106,24 @@ function SignIn(props) {
 	async function login() {
 		try {
 			await firebase.login(email, password)
+			props.history.replace('/dashboard')
+		} catch(error) {
+			alert(error.message)
+		}
+	}
+
+	async function loginWithGoogle() {
+		try {
+			await firebase.loginWithGoogle()
+			props.history.replace('/dashboard')
+		} catch(error) {
+			alert(error.message)
+		}
+	}
+
+	async function loginWithFacebook() {
+		try {
+			await firebase.loginWithFacebook()
 			props.history.replace('/dashboard')
 		} catch(error) {
 			alert(error.message)

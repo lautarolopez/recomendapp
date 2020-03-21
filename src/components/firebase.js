@@ -1,3 +1,4 @@
+import firebase from "firebase";
 import app from 'firebase/app'
 import 'firebase/auth'
 import 'firebase/firebase-firestore'
@@ -23,6 +24,22 @@ class Firebase {
 
 	login(email, password) {
 		return this.auth.signInWithEmailAndPassword(email, password)
+	}
+
+	loginWithGoogle(){
+		const provider = new firebase.auth.GoogleAuthProvider();
+		return firebase.auth().signInWithPopup(provider).then(function(result) {
+		  }).catch(function(error) {
+			console.log(error.message)
+		  });
+	}
+
+	loginWithFacebook(){
+		const provider = new firebase.auth.FacebookAuthProvider();
+		return firebase.auth().signInWithPopup(provider).then(function(result) {
+		  }).catch(function(error) {
+			console.log(error.message)
+		  });
 	}
 
 	logout() {

@@ -42,12 +42,12 @@ function Dashboard(props) {
 		firebase.getCurrentUserQuote().then(setQuote)
     }, [])
     
-    if(!firebase.getCurrentUsername()) {
-        // not logged in
-        alert('Please login first')
-        props.history.replace('/login')
-        return null
-    }
+    // if(!firebase.getCurrentUsername()) {
+    //     // not logged in
+    //     alert('Please login first')
+    //     props.history.replace('/login')
+    //     return null
+    // }
 
 	return (
 		<main className={classes.main}>
