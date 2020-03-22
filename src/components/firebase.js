@@ -22,6 +22,7 @@ class Firebase {
 		this.db = app.firestore()
 	}
 
+
 	login(email, password) {
 		return this.auth.signInWithEmailAndPassword(email, password)
 	}
@@ -36,10 +37,10 @@ class Firebase {
 
 	loginWithFacebook(){
 		const provider = new firebase.auth.FacebookAuthProvider();
-		return firebase.auth().signInWithPopup(provider).then(function(result) {
-		  }).catch(function(error) {
+		return firebase.auth().signInWithPopup(provider).then(function(result) {})
+		.catch(function(error) {
 			console.log(error.message)
-		  });
+	 	})
 	}
 
 	logout() {
@@ -76,6 +77,19 @@ class Firebase {
 	async getCurrentUserQuote() {
 		const quote = await this.db.doc(`users_codedamn_video/${this.auth.currentUser.uid}`).get()
 		return quote.get('quote')
+	}
+
+	addNewToDatabase(){
+		var user = this.db.collection('users').doc(this.auth.currentUser.uid);
+		user.get().then( userDB => {
+                       if (!userDB.exists) {
+							this.db.collection('users').doc(this.auth.currentUser.uid).set({
+				   				movies: [],
+								series: []
+							})
+                    	}
+                    }
+		)
 	}
 }
 

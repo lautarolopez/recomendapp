@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Typography, Paper, Avatar, CircularProgress, Button } from '@material-ui/core'
+import { Typography, Paper, Avatar, Button, Input, InputLabel, FormControl } from '@material-ui/core'
 import VerifiedUserOutlined from '@material-ui/icons/VerifiedUserOutlined'
 import withStyles from '@material-ui/core/styles/withStyles'
 import firebase from '../firebase'
@@ -9,48 +9,50 @@ const styles = theme => ({
 	main: {
 		width: 'auto',
 		display: 'block', // Fix IE 11 issue.
-		marginLeft: theme.spacing.unit * 3,
-		marginRight: theme.spacing.unit * 3,
-		[theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
+		marginLeft: theme.spacing() * 3,
+		marginRight: theme.spacing() * 3,
+		[theme.breakpoints.up(400 + theme.spacing() * 3 * 2)]: {
 			width: 400,
 			marginLeft: 'auto',
 			marginRight: 'auto',
 		},
 	},
 	paper: {
-		marginTop: theme.spacing.unit * 8,
+		marginTop: theme.spacing() * 8,
 		display: 'flex',
 		flexDirection: 'column',
 		alignItems: 'center',
-		padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
+		padding: `${theme.spacing() * 2}px ${theme.spacing() * 3}px ${theme.spacing() * 3}px`,
 	},
 	avatar: {
-		margin: theme.spacing.unit,
+		margin: theme.spacing(),
 		backgroundColor: theme.palette.secondary.main,
 	},
 	submit: {
-		marginTop: theme.spacing.unit * 3,
+		marginTop: theme.spacing() * 3,
 	},
 })
 
 function Dashboard(props) {
 	const { classes } = props
-    
-	const [quote, setQuote] = useState('')
+	const [isUserLoggedIn, setUserLoggedIn] = useState(true)
+	const [querySearch, setQuerySearch] = useState('')
 
 	useEffect(() => {
-		firebase.getCurrentUserQuote().then(setQuote)
-    }, [])
-    
-    // if(!firebase.getCurrentUsername()) {
-    //     // not logged in
-    //     alert('Please login first')
-    //     props.history.replace('/login')
-    //     return null
-    // }
+		if (!firebase.getCurrentUsername()) {
+			setUserLoggedIn(false)
+			alert('Please login first')
+			props.history.replace('/login')
+		} else {
+			
+		}
+	// eslint-disable-next-line
+	}, [])
 
 	return (
+		
 		<main className={classes.main}>
+			{isUserLoggedIn ? (
 			<Paper className={classes.paper}>
 				<Avatar className={classes.avatar}>
 					<VerifiedUserOutlined />
@@ -58,9 +60,21 @@ function Dashboard(props) {
 				<Typography component="h1" variant="h5">
 					Hello { firebase.getCurrentUsername() }
 				</Typography>
-				<Typography component="h1" variant="h5">
-					Your quote: {quote ? `"${quote}"` : <CircularProgress size={20} />}
-				</Typography>
+				<form className={classes.form} onSubmit={e => e.preventDefault() && false}>
+					<FormControl margin="normal" fullWidth>
+						<InputLabel htmlFor="querySearch">Search for a movie or TV Show</InputLabel>
+						<Input id="querySearch" name="querySearch" autoComplete="off" autoFocus value={querySearch} onChange={e => setQuerySearch(e.target.value)} />
+					</FormControl>
+					<Button
+						type="submit"
+						fullWidth
+						variant="contained"
+						color="primary"
+						onClick={search}
+						className={classes.submit}>
+						Search
+          			</Button>
+				</form>
 				<Button
 					type="submit"
 					fullWidth
@@ -71,8 +85,25 @@ function Dashboard(props) {
 					Logout
           		</Button>
 			</Paper>
+			)
+			:
+			( <Typography>NO ESTÁS LOGUEADO QUÉ HACÉS ACÁ</Typography>)}
 		</main>
 	)
+
+	async function search(){
+		await fetch(`https://api.themoviedb.org/3/search/movie?api_key=8acf7117c6859db295df155d5626c31a&query=${querySearch}`)
+			.then(function (response){
+				return response.json()
+			})
+			.then(function (data){
+				console.log(data.results[0].title)
+			})
+			.catch(function(err){
+				console.log(err)
+			})
+
+	}
 
 	async function logout() {
 		await firebase.logout()
