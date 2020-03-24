@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import { Typography, Paper, Avatar, Button, Input, InputLabel, FormControl } from '@material-ui/core'
+import './styles.css'
+import { Typography, Paper, Avatar, Button, Input, InputLabel, FormControl, List, ListItem, ListItemText, InputAdornment } from '@material-ui/core'
 import VerifiedUserOutlined from '@material-ui/icons/VerifiedUserOutlined'
+import SearchIcon from '@material-ui/icons/Search';
 import withStyles from '@material-ui/core/styles/withStyles'
 import firebase from '../firebase'
 import { withRouter } from 'react-router-dom'
@@ -37,17 +39,21 @@ function Dashboard(props) {
 	const { classes } = props
 	const [isUserLoggedIn, setUserLoggedIn] = useState(true)
 	const [querySearch, setQuerySearch] = useState('')
+	const [searchResults, setSearchResults] = useState([])
 
+	// eslint-disable-next-line
 	useEffect(() => {
 		if (!firebase.getCurrentUsername()) {
 			setUserLoggedIn(false)
 			alert('Please login first')
 			props.history.replace('/login')
 		} else {
-			
+			// if (searchResults.length > 0){
+				search()
+			//}
 		}
 	// eslint-disable-next-line
-	}, [])
+	})
 
 	return (
 		
@@ -62,19 +68,23 @@ function Dashboard(props) {
 				</Typography>
 				<form className={classes.form} onSubmit={e => e.preventDefault() && false}>
 					<FormControl margin="normal" fullWidth>
-						<InputLabel htmlFor="querySearch">Search for a movie or TV Show</InputLabel>
-						<Input id="querySearch" name="querySearch" autoComplete="off" autoFocus value={querySearch} onChange={e => setQuerySearch(e.target.value)} />
+						<InputLabel htmlFor="querySearch">Buscá una película o serie</InputLabel>
+						<Input id="querySearch" name="querySearch" autoComplete="off" endAdornment={<InputAdornment position="end"><SearchIcon></SearchIcon></InputAdornment>} autoFocus value={querySearch} onChange={e => setQuerySearch(e.target.value)} />
 					</FormControl>
-					<Button
-						type="submit"
-						fullWidth
-						variant="contained"
-						color="primary"
-						onClick={search}
-						className={classes.submit}>
-						Search
-          			</Button>
 				</form>
+				<List>
+					{(searchResults.length > 0) ? (searchResults.map((movie) => 
+						<ListItem key={movie.id} >
+							<img src={movie.poster_path != null ? 
+							("https://image.tmdb.org/t/p/w200" + movie.poster_path)
+							:
+							("https://www.themoviedb.org/assets/2/v4/logos/208x226-stacked-green-9484383bd9853615c113f020def5cbe27f6d08a84ff834f41371f223ebad4a3c.png") } 
+							alt={movie.title} />
+							<ListItemText inset primary={movie.title} />
+						</ListItem>)) 
+					: 
+					(<p>No buscaste nada cruck</p>)}
+				</List>
 				<Button
 					type="submit"
 					fullWidth
@@ -92,17 +102,18 @@ function Dashboard(props) {
 	)
 
 	async function search(){
-		await fetch(`https://api.themoviedb.org/3/search/movie?api_key=8acf7117c6859db295df155d5626c31a&query=${querySearch}`)
-			.then(function (response){
-				return response.json()
-			})
-			.then(function (data){
-				console.log(data.results[0].title)
-			})
-			.catch(function(err){
-				console.log(err)
-			})
-
+		if (querySearch.length !== 0) {
+			await fetch(`https://api.themoviedb.org/3/search/movie?api_key=8acf7117c6859db295df155d5626c31a&query=${querySearch}&language=es-AR`)
+				.then(function (response){
+					return response.json()
+				})
+				.then(function (data){
+					setSearchResults(data.results)
+				})
+				.catch(function(err){
+					console.log(err)
+				})
+		}
 	}
 
 	async function logout() {

@@ -74,11 +74,6 @@ class Firebase {
 		return this.auth.currentUser && this.auth.currentUser.displayName
 	}
 
-	async getCurrentUserQuote() {
-		const quote = await this.db.doc(`users_codedamn_video/${this.auth.currentUser.uid}`).get()
-		return quote.get('quote')
-	}
-
 	addNewToDatabase(){
 		var user = this.db.collection('users').doc(this.auth.currentUser.uid);
 		user.get().then( userDB => {
@@ -91,6 +86,10 @@ class Firebase {
                     }
 		)
 	}
+
+
+
+
 }
 
 export default new Firebase()
