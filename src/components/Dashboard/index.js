@@ -43,14 +43,13 @@ function Dashboard(props) {
 
 	// eslint-disable-next-line
 	useEffect(() => {
+		console.log(searchResults)
 		if (!firebase.getCurrentUsername()) {
 			setUserLoggedIn(false)
 			alert('Please login first')
 			props.history.replace('/login')
 		} else {
-			// if (searchResults.length > 0){
-				search()
-			//}
+			search()
 		}
 	// eslint-disable-next-line
 	})
@@ -73,17 +72,17 @@ function Dashboard(props) {
 					</FormControl>
 				</form>
 				<List>
-					{(searchResults.length > 0) ? (searchResults.map((movie) => 
+					{(querySearch.length !== 0) ? (searchResults.map((movie) => 
 						<ListItem key={movie.id} >
 							<img src={movie.poster_path != null ? 
 							("https://image.tmdb.org/t/p/w200" + movie.poster_path)
 							:
 							("https://www.themoviedb.org/assets/2/v4/logos/208x226-stacked-green-9484383bd9853615c113f020def5cbe27f6d08a84ff834f41371f223ebad4a3c.png") } 
 							alt={movie.title} />
-							<ListItemText inset primary={movie.title} />
+							<ListItemText inset primary={movie.release_date ? (movie.name ? movie.name : movie.title + " (" + movie.release_date.slice(0, 4) +")") : (movie.name ? (movie.first_air_date ? (movie.name + " (" + movie.first_air_date.slice(0, 4) + ")") : movie.name) : movie.title)} />
 						</ListItem>)) 
 					: 
-					(<p>No buscaste nada cruck</p>)}
+					(<p className="noVisible">No buscaste nada cruck</p>)}
 				</List>
 				<Button
 					type="submit"
@@ -103,16 +102,17 @@ function Dashboard(props) {
 
 	async function search(){
 		if (querySearch.length !== 0) {
-			await fetch(`https://api.themoviedb.org/3/search/movie?api_key=8acf7117c6859db295df155d5626c31a&query=${querySearch}&language=es-AR`)
+			await fetch(`https://api.themoviedb.org/3/search/multi?api_key=8acf7117c6859db295df155d5626c31a&query=${querySearch}&language=es-AR&include_image_language=es-AR`)
 				.then(function (response){
 					return response.json()
 				})
 				.then(function (data){
-					setSearchResults(data.results)
+					setSearchResults(data.results.slice(0, 5))
 				})
 				.catch(function(err){
 					console.log(err)
 				})
+		} else {
 		}
 	}
 
