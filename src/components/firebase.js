@@ -54,16 +54,6 @@ class Firebase {
 		})
 	}
 
-	addQuote(quote) {
-		if(!this.auth.currentUser) {
-			return alert('Not authorized')
-		}
-
-		return this.db.doc(`users_codedamn_video/${this.auth.currentUser.uid}`).set({
-			quote
-		})
-	}
-
 	isInitialized() {
 		return new Promise(resolve => {
 			this.auth.onAuthStateChanged(resolve)
@@ -77,18 +67,35 @@ class Firebase {
 	addNewToDatabase(){
 		var user = this.db.collection('users').doc(this.auth.currentUser.uid);
 		user.get().then( userDB => {
-                       if (!userDB.exists) {
-							this.db.collection('users').doc(this.auth.currentUser.uid).set({
-				   				movies: [],
-								series: []
-							})
+                       		if (!userDB.exists) {
+								this.db.collection('users').doc(this.auth.currentUser.uid).set({
+				   					movies: [],
+									series: []
+								})
+                    		}
                     	}
-                    }
 		)
 	}
 
-	storeNewItem(id){
-		console.log("Click en: " + id)
+	storeNewItem(item){
+		let user = this.db.collection('users').doc(this.auth.currentUser.uid);
+		user.get().then(userDB => {
+							 if (userDB.exists) {
+								let aux = userDB.data()
+								if (item.title){
+									if (!aux.movies.includes(item.id)){ 
+										aux.movies.push(item.id)
+									}	
+								} else if (item.name) { 
+									if (!aux.series.includes(item.id)){ 
+										aux.series.push(item.id)
+									}
+								}
+				 			 	this.db.collection('users').doc(this.auth.currentUser.uid).set(aux)
+			 				 }
+		 				}
+						)
+		
 	}
 
 

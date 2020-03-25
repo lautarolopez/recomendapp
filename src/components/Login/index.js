@@ -114,9 +114,13 @@ function SignIn(props) {
 
 	async function loginWithGoogle() {
 		try {
-			await firebase.loginWithGoogle()
-			firebase.addNewToDatabase()
-			props.history.replace('/dashboard')
+			let credentials = await firebase.loginWithGoogle()
+			if (credentials){ 
+				firebase.addNewToDatabase()
+				props.history.replace('/dashboard')
+			} else {
+				alert("Ya existe un usuario con ese email autenticado por otro medio")
+			}
 		} catch(error) {
 			alert(error.message)
 		}
@@ -124,9 +128,14 @@ function SignIn(props) {
 
 	async function loginWithFacebook() {
 		try {
-			await firebase.loginWithFacebook()
-			firebase.addNewToDatabase()
-			props.history.replace('/dashboard')
+			let credentials = await firebase.loginWithFacebook()
+			if (credentials){ 
+				firebase.addNewToDatabase()
+				props.history.replace('/dashboard')
+			} else {
+				alert("Ya existe un usuario con ese email autenticado por otro medio")
+			}
+			
 		} catch(error) {
 			alert(error.message)
 		}

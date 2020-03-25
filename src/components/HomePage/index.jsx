@@ -1,8 +1,10 @@
-import React from 'react'
+import React, { useState, useEffect} from 'react'
 import { Typography, Paper, Avatar, Button } from '@material-ui/core'
 import VerifiedUserOutlined from '@material-ui/icons/VerifiedUserOutlined'
 import withStyles from '@material-ui/core/styles/withStyles'
 import { Link } from 'react-router-dom'
+import firebase from '../firebase'
+
 
 const styles = theme => ({
     main: {
@@ -33,10 +35,22 @@ const styles = theme => ({
 })
 
 function HomePage(props) {
-    const { classes } = props
+	const { classes } = props
+	const [isUserLoggedIn, setUserLoggedIn] = useState(false)
 
-    return (
+	// eslint-disable-next-line
+	useEffect(() => {
+		if (firebase.getCurrentUsername()) {
+			setUserLoggedIn(true)
+			props.history.replace('/dashboard')
+		}
+	// eslint-disable-next-line
+	})
+
+    return (  	
 		<main className={classes.main}>
+			{isUserLoggedIn ? (<p>Redirección a dashboard</p>) :
+			(
 			<Paper className={classes.paper}>
 				<Avatar className={classes.avatar}>
 					<VerifiedUserOutlined />
@@ -75,6 +89,7 @@ function HomePage(props) {
 					Dashboard
           		</Button>
 			</Paper>
+			)}
 		</main>
 	)
 }
