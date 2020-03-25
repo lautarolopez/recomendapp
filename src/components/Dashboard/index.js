@@ -43,7 +43,6 @@ function Dashboard(props) {
 
 	// eslint-disable-next-line
 	useEffect(() => {
-		console.log(searchResults)
 		if (!firebase.getCurrentUsername()) {
 			setUserLoggedIn(false)
 			alert('Please login first')
@@ -107,7 +106,13 @@ function Dashboard(props) {
 					return response.json()
 				})
 				.then(function (data){
-					setSearchResults(data.results.slice(0, 5))
+					 let arrAux = [];
+					 data.results.slice(0, 50).forEach(item => {
+						if (!item.known_for_department){
+							arrAux.push(item);
+						}
+					 })
+					setSearchResults(arrAux.slice(0, 5))
 				})
 				.catch(function(err){
 					console.log(err)
