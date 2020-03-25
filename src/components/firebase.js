@@ -87,6 +87,10 @@ class Firebase {
 		)
 	}
 
+	storeNewItem(id){
+		console.log("Click en: " + id)
+	}
+
 
 
 

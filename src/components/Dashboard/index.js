@@ -72,7 +72,7 @@ function Dashboard(props) {
 				</form>
 				<List>
 					{(querySearch.length !== 0) ? (searchResults.map((movie) => 
-						<ListItem key={movie.id} >
+						<ListItem key={movie.id} onClick={() => firebase.storeNewItem(movie.id)} >
 							<img src={movie.poster_path != null ? 
 							("https://image.tmdb.org/t/p/w200" + movie.poster_path)
 							:
