@@ -98,7 +98,21 @@ class Firebase {
 		
 	}
 
-
+	async getCurrentUserLists(){
+		let aux = {
+			movies: [],
+			series: []
+		}
+		let user = this.db.collection('users').doc(this.auth.currentUser.uid);
+		await user.get().then( userDB => {
+							 if (userDB.exists) {
+								 aux.movies = userDB.data().movies
+								 aux.series = userDB.data().series
+			 				 }
+		 				}
+						)
+						return aux
+		}
 
 
 }
