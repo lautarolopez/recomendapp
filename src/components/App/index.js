@@ -34,6 +34,7 @@ export default function App() {
 					<Route exact path="/register" component={Register} />
 					<Route exact path="/dashboard" component={Dashboard} />
 					<Route exact path="/profile" component={Profile} />
+					<Route exact path="/profile/:id" component={Profile} />
 				</Switch>
 			</Router>
 		</MuiThemeProvider>

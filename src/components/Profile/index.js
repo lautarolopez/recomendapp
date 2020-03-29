@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './styles.css'
-import { Typography, Paper, Avatar, Button,  List, ListItem, ListItemText } from '@material-ui/core'
+import { Typography, Paper, Avatar,  List, ListItem, Card, CardHeader, CardContent, CardActionArea, CardMedia } from '@material-ui/core'
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import VerifiedUserOutlined from '@material-ui/icons/VerifiedUserOutlined'
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -44,7 +44,7 @@ function Profile(props) {
     const [dataFetched, setDataFetched] = useState(false)
 
     const handleTypeOfContent = (event, newTypeOfContent) => {
-        setTypeOfContent(newTypeOfContent)
+		setTypeOfContent(newTypeOfContent)
     }
 
     async function fetchId(id, type){
@@ -86,15 +86,12 @@ function Profile(props) {
 	useEffect(() => {
 		if (!firebase.getCurrentUsername()) {
 			setUserLoggedIn(false)
-			alert('Please login first')
-			props.history.replace('/login')
-		} else {
-            firebase.getCurrentUserLists().then((lists =>{
-                if (!dataFetched) {
-                    fetchItemsData(lists.movies, lists.series)
-                }
-            })) 
 		}
+        firebase.getUserLists(props.match.params.id).then((lists =>{
+            if (!dataFetched) {
+                fetchItemsData(lists.movies, lists.series)
+            }
+		}))
 	// eslint-disable-next-line
 	})
 
@@ -106,8 +103,8 @@ function Profile(props) {
 				<Avatar className={classes.avatar}>
 					<VerifiedUserOutlined />
 				</Avatar>
-				<Typography component="h1" variant="h5">
-					Hello { firebase.getCurrentUsername() }
+				<Typography component="h1" variant="h5" align="center">
+					{ firebase.getCurrentUsername() }
 				</Typography>
                 <br/>
 				<ToggleButtonGroup
@@ -116,7 +113,7 @@ function Profile(props) {
                     onChange={handleTypeOfContent}
                 >
                     <ToggleButton value="movies" aria-label="Movies">
-                        Movies
+                        Pelis
                     </ToggleButton>
                     <ToggleButton value="series" aria-label="Series">
                         Series
@@ -125,20 +122,50 @@ function Profile(props) {
                 <List>
                     {typeOfContent === "movies" ? 
                     (
-                    profileMovies.map((movie) => <ListItem key={movie.id}> <ListItemText>{movie.title}</ListItemText> </ListItem>)
+                    profileMovies.map((movie) => 
+					<ListItem key={movie.id}> 
+						<Card variant="outlined">
+							<CardActionArea>
+								<CardHeader title={ movie.title }> </CardHeader>
+								<CardContent> 
+									<Typography variant="body2" component="p">
+										{ movie.overview }
+									</Typography>
+									<img src={movie.poster_path != null ? 
+										("https://image.tmdb.org/t/p/w500" + movie.poster_path)
+										:
+										("https://www.themoviedb.org/assets/2/v4/logos/208x226-stacked-green-9484383bd9853615c113f020def5cbe27f6d08a84ff834f41371f223ebad4a3c.png") }
+									alt={movie.title}
+									/> 
+								</CardContent>
+							</CardActionArea>
+						</Card> 
+						</ListItem>
+					)
                     )
                     :
-                    (<Typography>ESTÁS VIENDO SERIES</Typography>)}
+                    (
+                        profileSeries.map((serie) => 
+						<ListItem key={serie.id}> 
+							<Card variant="outlined">
+								<CardActionArea>
+									<CardHeader title={ serie.name }> </CardHeader>
+									<CardContent> 
+										<Typography variant="body2" component="p">
+											{ serie.overview }
+										</Typography>
+										<img src={serie.poster_path != null ? 
+											("https://image.tmdb.org/t/p/w500" + serie.poster_path)
+											:
+											("https://www.themoviedb.org/assets/2/v4/logos/208x226-stacked-green-9484383bd9853615c113f020def5cbe27f6d08a84ff834f41371f223ebad4a3c.png") }
+										alt={serie.title}
+										/> 
+									</CardContent>
+								</CardActionArea>
+							</Card> 
+						</ListItem>)
+                    )}
 				</List>
-				<Button
-					type="submit"
-					fullWidth
-					variant="contained"
-					color="secondary"
-					onClick={logout}
-					className={classes.submit}>
-					Logout
-          		</Button>
 			</Paper>
 			)
 			:
@@ -146,11 +173,6 @@ function Profile(props) {
 		</main>
 	)
 
-
-	async function logout() {
-		await firebase.logout()
-		props.history.push('/')
-	}
 }
 
 export default withRouter(withStyles(styles)(Profile))
