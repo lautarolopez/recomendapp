@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Typography, Paper, Avatar, Button, FormControl, Input, InputLabel } from '@material-ui/core'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -42,6 +42,12 @@ function SignIn(props) {
 
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
+
+	useEffect(() => {
+		if (firebase.getCurrentUsername()) {	 
+			props.history.replace('/dashboard')
+		}
+	})
 
 	return (
 		<main className={classes.main}>
@@ -113,32 +119,16 @@ function SignIn(props) {
 	}
 
 	async function loginWithGoogle() {
-		try {
-			let credentials = await firebase.loginWithGoogle()
-			if (credentials){ 
-				firebase.addNewToDatabase()
-				props.history.replace('/dashboard')
-			} else {
-				alert("Ya existe un usuario con ese email autenticado por otro medio")
-			}
-		} catch(error) {
-			alert(error.message)
-		}
+		await firebase.loginWithGoogle() 
+		firebase.addNewUserToDatabase()
+		props.history.replace('/dashboard')
 	}
 
 	async function loginWithFacebook() {
-		try {
-			let credentials = await firebase.loginWithFacebook()
-			if (credentials){ 
-				firebase.addNewToDatabase()
-				props.history.replace('/dashboard')
-			} else {
-				alert("Ya existe un usuario con ese email autenticado por otro medio")
-			}
-			
-		} catch(error) {
-			alert(error.message)
-		}
+		await firebase.loginWithFacebook().then(() => {
+			firebase.addNewUserToDatabase()
+			props.history.replace('/dashboard')
+		}) 
 	}
 }
 

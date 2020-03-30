@@ -27,20 +27,42 @@ class Firebase {
 		return this.auth.signInWithEmailAndPassword(email, password)
 	}
 
-	loginWithGoogle(){
+	async loginWithGoogle(){
 		const provider = new firebase.auth.GoogleAuthProvider();
-		return firebase.auth().signInWithPopup(provider).then(function(result) {
+		await firebase.auth().signInWithPopup(provider).then(function(result) {
 		  }).catch(function(error) {
-			console.log(error.message)
+			if (error.code === 'auth/account-exists-with-different-credential'){
+				let pendingCred = error.credential;
+				let email = error.email;
+				this.auth.fetchSingInMethodsForEmail(email).then(function(methods){
+					console.log(methods)
+					console.log(pendingCred)
+				})
+			}
 		  });
 	}
 
-	loginWithFacebook(){
+	async loginWithFacebook(){
 		const provider = new firebase.auth.FacebookAuthProvider();
-		return firebase.auth().signInWithPopup(provider).then(function(result) {})
-		.catch(function(error) {
-			console.log(error.message)
-	 	})
+		await firebase.auth().signInWithPopup(provider).then(function(result) {
+			console.log(result)
+		})
+		.catch(async function(error) {
+			if (error.code === 'auth/account-exists-with-different-credential'){
+				let email = error.email;
+				await firebase.auth().fetchSignInMethodsForEmail(email).then(async function(methods){
+					if (methods.includes('google.com')){
+						const provider = new firebase.auth.GoogleAuthProvider();
+						await firebase.auth().signInWithPopup(provider).then(function(result) {
+		  				}).catch(function(error) {
+							  throw error;
+						  })
+					} else if (methods.includes('password')) {
+							alert("Ingresa con tu correo y contraseña")
+					}
+		  		});
+			}
+		})
 	}
 
 	logout() {
@@ -64,17 +86,19 @@ class Firebase {
 		return this.auth.currentUser && this.auth.currentUser.displayName
 	}
 
-	addNewToDatabase(){
-		var user = this.db.collection('users').doc(this.auth.currentUser.uid);
-		user.get().then( userDB => {
-                       		if (!userDB.exists) {
-								this.db.collection('users').doc(this.auth.currentUser.uid).set({
-				   					movies: [],
-									series: []
-								})
-                    		}
-                    	}
-		)
+	addNewUserToDatabase(){
+		if (this.auth.currentUser){
+			var user = this.db.collection('users').doc(this.auth.currentUser.uid);
+			user.get().then( userDB => {
+								if (!userDB.exists) {
+									this.db.collection('users').doc(this.auth.currentUser.uid).set({
+										movies: [],
+										series: []
+									})
+								}
+							}
+			)
+		}
 	}
 
 	storeNewItem(item){

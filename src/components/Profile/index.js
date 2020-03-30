@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './styles.css'
-import { Typography, Paper, Avatar,  List, ListItem, Card, CardHeader, CardContent, CardActionArea, CardMedia } from '@material-ui/core'
+import { Typography, Paper, Avatar,  List, ListItem, Card, CardHeader, CardContent, CardActionArea, Button } from '@material-ui/core'
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import VerifiedUserOutlined from '@material-ui/icons/VerifiedUserOutlined'
 import withStyles from '@material-ui/core/styles/withStyles'
@@ -98,13 +98,12 @@ function Profile(props) {
 	return (
 		
 		<main className={classes.main}>
-			{isUserLoggedIn ? (
 			<Paper className={classes.paper}>
 				<Avatar className={classes.avatar}>
 					<VerifiedUserOutlined />
 				</Avatar>
 				<Typography component="h1" variant="h5" align="center">
-					{ firebase.getCurrentUsername() }
+					{/* { firebase.getCurrentUsername() } */}
 				</Typography>
                 <br/>
 				<ToggleButtonGroup
@@ -137,6 +136,17 @@ function Profile(props) {
 										("https://www.themoviedb.org/assets/2/v4/logos/208x226-stacked-green-9484383bd9853615c113f020def5cbe27f6d08a84ff834f41371f223ebad4a3c.png") }
 									alt={movie.title}
 									/> 
+									{isUserLoggedIn ? (
+									<Button>
+										Quitar de mi lista
+									</Button>
+									)
+									:
+									( 
+									<Button>
+										Agregar a mi lista
+									</Button>
+									)}
 								</CardContent>
 							</CardActionArea>
 						</Card> 
@@ -159,7 +169,18 @@ function Profile(props) {
 											:
 											("https://www.themoviedb.org/assets/2/v4/logos/208x226-stacked-green-9484383bd9853615c113f020def5cbe27f6d08a84ff834f41371f223ebad4a3c.png") }
 										alt={serie.title}
-										/> 
+										/>
+										{isUserLoggedIn ? (
+										<Button>
+											Quitar de mi lista
+										</Button>
+										)
+										:
+										(	 
+										<Button>
+											Agregar a mi lista
+										</Button>
+										)} 
 									</CardContent>
 								</CardActionArea>
 							</Card> 
@@ -167,9 +188,6 @@ function Profile(props) {
                     )}
 				</List>
 			</Paper>
-			)
-			:
-			( <Typography>NO ESTÁS LOGUEADO QUÉ HACÉS ACÁ</Typography>)}
 		</main>
 	)
 
