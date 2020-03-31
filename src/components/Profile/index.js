@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './styles.css'
 import { Typography, Paper, Avatar,  List, ListItem, Card, CardHeader, CardContent, CardActionArea, Button } from '@material-ui/core'
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
-import VerifiedUserOutlined from '@material-ui/icons/VerifiedUserOutlined'
+import PersonIcon from '@material-ui/icons/Person';
 import withStyles from '@material-ui/core/styles/withStyles'
 import firebase from '../firebase'
 import { withRouter } from 'react-router-dom'
@@ -42,6 +42,7 @@ function Profile(props) {
     const [profileMovies, setProfileMovies] = useState([])
     const [profileSeries, setProfileSeries] = useState([])
     const [dataFetched, setDataFetched] = useState(false)
+	const [profilePicture, setProfilePicture] = useState("")
 
     const handleTypeOfContent = (event, newTypeOfContent) => {
 		setTypeOfContent(newTypeOfContent)
@@ -89,9 +90,13 @@ function Profile(props) {
 		}
         firebase.getUserLists(props.match.params.id).then((lists =>{
             if (!dataFetched) {
-                fetchItemsData(lists.movies, lists.series)
-            }
+				fetchItemsData(lists.movies, lists.series)
+				firebase.getUserAvatarWithId(props.match.params.id).then((photoURL) => {
+					setProfilePicture(photoURL)
+				})
+			}
 		}))
+		
 	// eslint-disable-next-line
 	})
 
@@ -99,9 +104,12 @@ function Profile(props) {
 		
 		<main className={classes.main}>
 			<Paper className={classes.paper}>
-				<Avatar className={classes.avatar}>
-					<VerifiedUserOutlined />
-				</Avatar>
+				{profilePicture !== "" ? (
+				<Avatar alt="profile" src={profilePicture} className={props.large}/>)
+				:
+				(<Avatar className={props.purple}>
+					<PersonIcon />
+				</Avatar>) }
 				<Typography component="h1" variant="h5" align="center">
 					{/* { firebase.getCurrentUsername() } */}
 				</Typography>
@@ -124,31 +132,26 @@ function Profile(props) {
                     profileMovies.map((movie) => 
 					<ListItem key={movie.id}> 
 						<Card variant="outlined">
-							<CardActionArea>
 								<CardHeader title={ movie.title }> </CardHeader>
 								<CardContent> 
 									<Typography variant="body2" component="p">
 										{ movie.overview }
 									</Typography>
-									<img src={movie.poster_path != null ? 
+									<img src={movie.poster_path !== null ? 
 										("https://image.tmdb.org/t/p/w500" + movie.poster_path)
 										:
 										("https://www.themoviedb.org/assets/2/v4/logos/208x226-stacked-green-9484383bd9853615c113f020def5cbe27f6d08a84ff834f41371f223ebad4a3c.png") }
 									alt={movie.title}
 									/> 
-									{isUserLoggedIn ? (
-									<Button>
+									{isUserLoggedIn ? 
+									(<Button>
 										Quitar de mi lista
-									</Button>
-									)
+									</Button>)
 									:
-									( 
-									<Button>
+									(<Button>
 										Agregar a mi lista
-									</Button>
-									)}
+									</Button>)}
 								</CardContent>
-							</CardActionArea>
 						</Card> 
 						</ListItem>
 					)
@@ -158,7 +161,6 @@ function Profile(props) {
                         profileSeries.map((serie) => 
 						<ListItem key={serie.id}> 
 							<Card variant="outlined">
-								<CardActionArea>
 									<CardHeader title={ serie.name }> </CardHeader>
 									<CardContent> 
 										<Typography variant="body2" component="p">
@@ -170,21 +172,18 @@ function Profile(props) {
 											("https://www.themoviedb.org/assets/2/v4/logos/208x226-stacked-green-9484383bd9853615c113f020def5cbe27f6d08a84ff834f41371f223ebad4a3c.png") }
 										alt={serie.title}
 										/>
-										{isUserLoggedIn ? (
-										<Button>
+										{isUserLoggedIn ? 
+										(<Button>
 											Quitar de mi lista
-										</Button>
-										)
+										</Button>)
 										:
-										(	 
-										<Button>
+										(<Button>
 											Agregar a mi lista
-										</Button>
-										)} 
+										</Button>)} 
 									</CardContent>
-								</CardActionArea>
 							</Card> 
-						</ListItem>)
+						</ListItem>
+					)
                     )}
 				</List>
 			</Paper>

@@ -119,14 +119,15 @@ function SignIn(props) {
 	}
 
 	async function loginWithGoogle() {
-		await firebase.loginWithGoogle() 
-		firebase.addNewUserToDatabase()
-		props.history.replace('/dashboard')
+		await firebase.loginWithGoogle((user) =>{
+			firebase.addNewUserToDatabase(user.photoUrl)
+			props.history.replace('/dashboard')
+		}) 
 	}
 
 	async function loginWithFacebook() {
-		await firebase.loginWithFacebook().then(() => {
-			firebase.addNewUserToDatabase()
+		await firebase.loginWithFacebook().then((user) => {
+			firebase.addNewUserToDatabase(user.photoURL)
 			props.history.replace('/dashboard')
 		}) 
 	}

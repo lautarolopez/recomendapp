@@ -28,24 +28,20 @@ class Firebase {
 	}
 
 	async loginWithGoogle(){
+		let user
 		const provider = new firebase.auth.GoogleAuthProvider();
 		await firebase.auth().signInWithPopup(provider).then(function(result) {
-		  }).catch(function(error) {
-			if (error.code === 'auth/account-exists-with-different-credential'){
-				let pendingCred = error.credential;
-				let email = error.email;
-				this.auth.fetchSingInMethodsForEmail(email).then(function(methods){
-					console.log(methods)
-					console.log(pendingCred)
-				})
-			}
-		  });
+			user = result.user
+		}).catch(function(error) {
+		});
+		return user;
 	}
 
 	async loginWithFacebook(){
+		let user
 		const provider = new firebase.auth.FacebookAuthProvider();
 		await firebase.auth().signInWithPopup(provider).then(function(result) {
-			console.log(result)
+			user = result.user
 		})
 		.catch(async function(error) {
 			if (error.code === 'auth/account-exists-with-different-credential'){
@@ -54,7 +50,8 @@ class Firebase {
 					if (methods.includes('google.com')){
 						const provider = new firebase.auth.GoogleAuthProvider();
 						await firebase.auth().signInWithPopup(provider).then(function(result) {
-		  				}).catch(function(error) {
+							user = result.user
+						}).catch(function(error) {
 							  throw error;
 						  })
 					} else if (methods.includes('password')) {
@@ -63,6 +60,7 @@ class Firebase {
 		  		});
 			}
 		})
+		return user
 	}
 
 	logout() {
@@ -86,14 +84,27 @@ class Firebase {
 		return this.auth.currentUser && this.auth.currentUser.displayName
 	}
 
-	addNewUserToDatabase(){
+	async getUserAvatarWithId(id){
+		let aux
+		let user = this.db.collection('users').doc(id);
+		await user.get().then( userDB => {
+							 if (userDB.exists) {
+								 aux = userDB.data().photoURL
+			 				 }
+		 				}
+						)
+		return aux
+	}
+
+	addNewUserToDatabase(photoURL){
 		if (this.auth.currentUser){
 			var user = this.db.collection('users').doc(this.auth.currentUser.uid);
 			user.get().then( userDB => {
 								if (!userDB.exists) {
 									this.db.collection('users').doc(this.auth.currentUser.uid).set({
 										movies: [],
-										series: []
+										series: [],
+										photoURL: photoURL
 									})
 								}
 							}

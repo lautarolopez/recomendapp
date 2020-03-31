@@ -117,7 +117,6 @@ function Dashboard(props) {
 				.catch(function(err){
 					console.log(err)
 				})
-		} else {
 		}
 	}
 
