@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './styles.css'
-import { Typography, Paper, Avatar,  List, ListItem, Card, CardHeader, CardContent, CardActionArea, Button } from '@material-ui/core'
+import { Typography, Paper, Avatar,  List, ListItem, Card, CardHeader, CardContent, Button } from '@material-ui/core'
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import PersonIcon from '@material-ui/icons/Person';
 import withStyles from '@material-ui/core/styles/withStyles'
