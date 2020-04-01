@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import './styles.css'
 import { Typography, Paper, Avatar,  List, ListItem, Card, CardHeader, CardContent, Button } from '@material-ui/core'
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
+import Dashboard from '../Dashboard'
 import PersonIcon from '@material-ui/icons/Person';
 import withStyles from '@material-ui/core/styles/withStyles'
 import firebase from '../firebase'
@@ -117,6 +118,7 @@ function Profile(props) {
 				<Typography component="h1" variant="h5" align="center">
 					{profileName !== "" ? (profileName) : ("User")}
 				</Typography>
+				<Dashboard dataFetcher={dataFetched} />
                 <br/>
 				{ dataFetched ? 
 				(

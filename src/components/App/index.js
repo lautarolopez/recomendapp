@@ -4,7 +4,6 @@ import './styles.css'
 import HomePage from '../HomePage'
 import Login from '../Login'
 import Register from '../Register'
-import Dashboard from '../Dashboard'
 import Profile from '../Profile'
 import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles'
 import { CssBaseline, CircularProgress } from '@material-ui/core'
@@ -32,7 +31,6 @@ export default function App() {
 					<Route exact path="/" component={HomePage} />
 					<Route exact path="/login" component={Login} />
 					<Route exact path="/register" component={Register} />
-					<Route exact path="/dashboard" component={Dashboard} />
 					<Route exact path="/profile" component={Profile} />
 					<Route exact path="/profile/:id" component={Profile} />
 				</Switch>

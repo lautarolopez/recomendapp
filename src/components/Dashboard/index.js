@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import './styles.css'
-import { Typography, Paper, Avatar, Button, Input, InputLabel, FormControl, List, ListItem, ListItemText, InputAdornment } from '@material-ui/core'
-import VerifiedUserOutlined from '@material-ui/icons/VerifiedUserOutlined'
+import { Typography, Input, InputLabel, FormControl, List, ListItem, ListItemText, InputAdornment } from '@material-ui/core'
 import SearchIcon from '@material-ui/icons/Search';
 import withStyles from '@material-ui/core/styles/withStyles'
 import firebase from '../firebase'
@@ -54,49 +53,35 @@ function Dashboard(props) {
 	})
 
 	return (
-		
-		<main className={classes.main}>
-			{isUserLoggedIn ? (
-			<Paper className={classes.paper}>
-				<Avatar className={classes.avatar}>
-					<VerifiedUserOutlined />
-				</Avatar>
-				<Typography component="h1" variant="h5">
-					Hello { firebase.getCurrentUsername() }
-				</Typography>
-				<form className={classes.form} onSubmit={e => e.preventDefault() && false}>
-					<FormControl margin="normal" fullWidth>
-						<InputLabel htmlFor="querySearch">Buscá una película o serie</InputLabel>
-						<Input id="querySearch" name="querySearch" autoComplete="off" endAdornment={<InputAdornment position="end"><SearchIcon></SearchIcon></InputAdornment>} autoFocus value={querySearch} onChange={e => setQuerySearch(e.target.value)} />
-					</FormControl>
-				</form>
-				<List>
-					{(querySearch.length !== 0) ? (searchResults.map((movie) => 
-						<ListItem key={movie.id} onClick={() => firebase.storeNewItem(movie)} >
-							<img src={movie.poster_path != null ? 
-							("https://image.tmdb.org/t/p/w200" + movie.poster_path)
+			isUserLoggedIn ? (
+				<>
+				<List onBlur={ e => setQuerySearch("") }>
+					<form className={classes.form} onSubmit={e => e.preventDefault() && false}>
+						<FormControl margin="normal" fullWidth>
+							<InputLabel htmlFor="querySearch">Buscá una película o serie</InputLabel>
+							<Input id="querySearch" name="querySearch" autoComplete="off" endAdornment={<InputAdornment position="end"><SearchIcon></SearchIcon></InputAdornment>} autoFocus value={querySearch} onChange={e => setQuerySearch(e.target.value)} />
+						</FormControl>
+					</form>
+					{(querySearch.length !== 0) ? (searchResults.map((item) => 
+						<ListItem key={item.id} onMouseDown={(e) => {
+							e.preventDefault()
+							firebase.storeNewItem(item)
+							setQuerySearch("")
+						}} >
+							<img src={item.poster_path != null ? 
+							("https://image.tmdb.org/t/p/w200" + item.poster_path)
 							:
 							("https://www.themoviedb.org/assets/2/v4/logos/208x226-stacked-green-9484383bd9853615c113f020def5cbe27f6d08a84ff834f41371f223ebad4a3c.png") } 
-							alt={movie.title} />
-							<ListItemText inset primary={movie.release_date ? (movie.name ? movie.name : movie.title + " (" + movie.release_date.slice(0, 4) +")") : (movie.name ? (movie.first_air_date ? (movie.name + " (" + movie.first_air_date.slice(0, 4) + ")") : movie.name) : movie.title)} />
+							alt={item.title} />
+							<ListItemText inset primary={item.release_date ? (item.name ? item.name : item.title + " (" + item.release_date.slice(0, 4) +")") : (item.name ? (item.first_air_date ? (item.name + " (" + item.first_air_date.slice(0, 4) + ")") : item.name) : item.title)} />
 						</ListItem>)) 
 					: 
 					(<p className="noVisible">No buscaste nada cruck</p>)}
 				</List>
-				<Button
-					type="submit"
-					fullWidth
-					variant="contained"
-					color="secondary"
-					onClick={logout}
-					className={classes.submit}>
-					Logout
-          		</Button>
-			</Paper>
+				</>
 			)
 			:
-			( <Typography>NO ESTÁS LOGUEADO QUÉ HACÉS ACÁ</Typography>)}
-		</main>
+			( <Typography>NO ESTÁS LOGUEADO QUÉ HACÉS ACÁ</Typography>)
 	)
 
 	async function search(){
