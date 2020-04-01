@@ -127,7 +127,7 @@ function SignIn(props) {
 
 	async function loginWithFacebook() {
 		await firebase.loginWithFacebook().then((user) => {
-			firebase.addNewUserToDatabase(user.photoURL)
+			firebase.addNewUserToDatabase(user.photoURL, user.displayName)
 			props.history.replace('/dashboard')
 		}) 
 	}

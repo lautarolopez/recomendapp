@@ -12,7 +12,7 @@ const config = {
     storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
     messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
     appId: process.env.REACT_APP_APP_ID,
-    measurementId: process.env.REACT_APP_MEASUREMENT_ID,
+    measurementId: process.env.REACT_APP_MEASUREMENT_ID
 };
 
 class Firebase {
@@ -63,6 +63,10 @@ class Firebase {
 		return user
 	}
 
+	showConfig(){
+		console.log(config)
+	}
+
 	logout() {
 		return this.auth.signOut()
 	}
@@ -96,7 +100,19 @@ class Firebase {
 		return aux
 	}
 
-	addNewUserToDatabase(photoURL){
+	async getUserDisplayNameWithId(id){
+		let aux
+		let user = this.db.collection('users').doc(id);
+		await user.get().then( userDB => {
+							 if (userDB.exists) {
+								 aux = userDB.data().displayName
+			 				 }
+		 				}
+						)
+		return aux
+	}
+
+	addNewUserToDatabase(photoURL, displayName){
 		if (this.auth.currentUser){
 			var user = this.db.collection('users').doc(this.auth.currentUser.uid);
 			user.get().then( userDB => {
@@ -104,7 +120,8 @@ class Firebase {
 									this.db.collection('users').doc(this.auth.currentUser.uid).set({
 										movies: [],
 										series: [],
-										photoURL: photoURL
+										photoURL: photoURL,
+										displayName: displayName,
 									})
 								}
 							}

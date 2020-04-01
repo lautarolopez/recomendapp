@@ -43,6 +43,7 @@ function Profile(props) {
     const [profileSeries, setProfileSeries] = useState([])
     const [dataFetched, setDataFetched] = useState(false)
 	const [profilePicture, setProfilePicture] = useState("")
+	const [profileName, setProfileName] = useState("")
 
     const handleTypeOfContent = (event, newTypeOfContent) => {
 		setTypeOfContent(newTypeOfContent)
@@ -94,6 +95,9 @@ function Profile(props) {
 				firebase.getUserAvatarWithId(props.match.params.id).then((photoURL) => {
 					setProfilePicture(photoURL)
 				})
+				firebase.getUserDisplayNameWithId(props.match.params.id).then((displayName) => {
+					setProfileName(displayName)
+				})
 			}
 		}))
 		
@@ -111,7 +115,7 @@ function Profile(props) {
 					<PersonIcon />
 				</Avatar>) }
 				<Typography component="h1" variant="h5" align="center">
-					{/* { firebase.getCurrentUsername() } */}
+					{profileName !== "" ? (profileName) : ("User")}
 				</Typography>
                 <br/>
 				<ToggleButtonGroup
