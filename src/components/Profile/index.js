@@ -50,24 +50,24 @@ function Profile(props) {
     }
 
     async function fetchId(id, type){
-        await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=8acf7117c6859db295df155d5626c31a&language=es-AR&include_image_language=es-AR`)
-				.then(function (response){
-					return response.json()
-				})
-				.then(function (data){
-					 if (type === "movie"){
-                         let aux = profileMovies
-                         aux.push(data)
-                         setProfileMovies(aux)
-                     } else {
-                        let aux = profileSeries
-                        aux.push(data)
-                        setProfileSeries(aux)
-                     }
-				})
-				.catch(function(err){
-					console.log(err)
-				})
+			await fetch(`https://api.themoviedb.org/3/${type}/${id}?api_key=8acf7117c6859db295df155d5626c31a&language=es-AR&include_image_language=es-AR`)
+					.then(function (response){
+						return response.json()
+					})
+					.then(function (data){
+						if (type === "movie"){
+							let aux = profileMovies
+							aux.push(data)
+							setProfileMovies(aux)
+						} else {
+							let aux = profileSeries
+							aux.push(data)
+							setProfileSeries(aux)
+						}
+					})
+					.catch(function(err){
+						console.log(err)
+					})
     }
 
     async function fetchItemsData(moviesList, seriesList){
@@ -90,7 +90,7 @@ function Profile(props) {
 			setUserLoggedIn(false)
 		}
         firebase.getUserLists(props.match.params.id).then((lists =>{
-            if (!dataFetched) {
+            if (!dataFetched && (profileMovies.length === 0 && profileSeries.length === 0)) {
 				fetchItemsData(lists.movies, lists.series)
 				firebase.getUserAvatarWithId(props.match.params.id).then((photoURL) => {
 					setProfilePicture(photoURL)
@@ -118,6 +118,9 @@ function Profile(props) {
 					{profileName !== "" ? (profileName) : ("User")}
 				</Typography>
                 <br/>
+				{ dataFetched ? 
+				(
+				<>
 				<ToggleButtonGroup
                     value={typeOfContent}
                     exclusive
@@ -129,7 +132,7 @@ function Profile(props) {
                     <ToggleButton value="series" aria-label="Series">
                         Series
                     </ToggleButton>
-                </ToggleButtonGroup>
+                </ToggleButtonGroup>	
                 <List>
                     {typeOfContent === "movies" ? 
                     (
@@ -190,6 +193,10 @@ function Profile(props) {
 					)
                     )}
 				</List>
+				</>
+				)
+				:
+				(<Typography> Cargando contenido </Typography>)}
 			</Paper>
 		</main>
 	)
