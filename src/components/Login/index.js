@@ -112,7 +112,7 @@ function SignIn(props) {
 	async function login() {
 		try {
 			await firebase.login(email, password)
-			props.history.replace('/dashboard')
+			props.history.replace('/profile/' + firebase.getCurrentUserId())
 		} catch(error) {
 			alert(error.message)
 		}
@@ -121,14 +121,14 @@ function SignIn(props) {
 	async function loginWithGoogle() {
 		await firebase.loginWithGoogle((user) =>{
 			firebase.addNewUserToDatabase(user.photoUrl)
-			props.history.replace('/dashboard')
+			props.history.replace('/profile/' + firebase.getCurrentUserId())
 		}) 
 	}
 
 	async function loginWithFacebook() {
 		await firebase.loginWithFacebook().then((user) => {
 			firebase.addNewUserToDatabase(user.photoURL, user.displayName)
-			props.history.replace('/dashboard')
+			props.history.replace('/profile/' + firebase.getCurrentUserId())
 		}) 
 	}
 }

@@ -42,7 +42,7 @@ function HomePage(props) {
 	useEffect(() => {
 		if (firebase.getCurrentUsername()) {
 			setUserLoggedIn(true)
-			props.history.replace('/dashboard')
+			props.history.replace('/profile/' + firebase.getCurrentUserId())
 		}
 	// eslint-disable-next-line
 	})
