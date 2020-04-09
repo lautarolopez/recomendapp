@@ -1,16 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./styles.css";
-import {
-  Typography,
-  Paper,
-  Avatar,
-  List,
-  ListItem,
-  Button,
-} from "@material-ui/core";
+import { Typography, Paper, Avatar, List, ListItem } from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import SearchBar from "../SearchBar";
 import CardItem from "../CardItem";
+import HeadBar from "../HeadBar";
 import PersonIcon from "@material-ui/icons/Person";
 import withStyles from "@material-ui/core/styles/withStyles";
 import firebase from "../firebase";
@@ -18,12 +12,12 @@ import { withRouter } from "react-router-dom";
 
 const styles = (theme) => ({
   main: {
-    width: "auto",
+    width: "100%",
     display: "block", // Fix IE 11 issue.
     marginLeft: theme.spacing() * 3,
     marginRight: theme.spacing() * 3,
     [theme.breakpoints.up(400 + theme.spacing() * 3 * 2)]: {
-      width: 400,
+      width: "100%",
       marginLeft: "auto",
       marginRight: "auto",
     },
@@ -68,11 +62,11 @@ function Profile(props) {
         return response.json();
       })
       .then(function (data) {
-        if (type === "movie") {
+        if (type === "movie" && !profileMovies.includes(data)) {
           let aux = profileMovies;
           aux.push(data);
           setProfileMovies(aux);
-        } else {
+        } else if (!profileSeries.includes(data)) {
           let aux = profileSeries;
           aux.push(data);
           setProfileSeries(aux);
@@ -103,11 +97,7 @@ function Profile(props) {
       setUserLoggedIn(false);
     }
     firebase.getUserLists(props.match.params.id).then((lists) => {
-      if (
-        !dataFetched &&
-        profileMovies.length === 0 &&
-        profileSeries.length === 0
-      ) {
+      if (!dataFetched) {
         fetchItemsData(lists.movies, lists.series);
         firebase.getUserAvatarWithId(props.match.params.id).then((photoURL) => {
           setProfilePicture(photoURL);
@@ -120,28 +110,45 @@ function Profile(props) {
       }
     });
 
+    if (profileMovies.length !== 0) {
+      let uniqueMovies = profileMovies.filter(
+        (valorActual, indiceActual, arreglo) => {
+          return (
+            arreglo.findIndex(
+              (valorDelArreglo) =>
+                JSON.stringify(valorDelArreglo) === JSON.stringify(valorActual)
+            ) === indiceActual
+          );
+        }
+      );
+
+      if (uniqueMovies.length !== profileMovies.length) {
+        setProfileMovies(uniqueMovies);
+      }
+    }
+
     // eslint-disable-next-line
   });
 
-  async function logout() {
-    await firebase.logout();
-    props.history.push("/");
-  }
-
   return (
     <main className={classes.main}>
+      <HeadBar isUserLoggedIn={isUserLoggedIn} />
       <Paper className={classes.paper}>
         {profilePicture !== "" ? (
           <Avatar alt="profile" src={profilePicture} className={props.large} />
         ) : (
-          <Avatar className={props.purple}>
+          <Avatar>
             <PersonIcon />
           </Avatar>
         )}
         <Typography component="h1" variant="h5" align="center">
           {profileName !== "" ? profileName : "User"}
         </Typography>
-        <SearchBar dataFetcher={dataFetched} />
+        {isUserLoggedIn ? (
+          <SearchBar dataFetcher={dataFetched} />
+        ) : (
+          <Typography> No estás logueado cruck</Typography>
+        )}
         <br />
         {dataFetched ? (
           <>
@@ -186,7 +193,6 @@ function Profile(props) {
         ) : (
           <Typography> Cargando contenido </Typography>
         )}
-        <Button onClick={logout}> Cerrar Sesión </Button>
       </Paper>
     </main>
   );
