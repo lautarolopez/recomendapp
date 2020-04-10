@@ -57,6 +57,7 @@ function CardItem(props) {
   function removeFromList(e) {
     e.preventDefault();
     firebase.removeItemFromList(props.id);
+    props.onDeleteFromView(props.id);
   }
 }
 

@@ -88,6 +88,7 @@ function SearchBar(props) {
               onMouseDown={(e) => {
                 e.preventDefault();
                 firebase.storeNewItem(item);
+                props.dataFetcher(item.id, item.title ? "movie" : "tv");
                 setQuerySearch("");
               }}
             >

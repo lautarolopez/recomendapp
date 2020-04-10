@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
 import "./styles.css";
-import { Typography, Paper, Avatar, List, ListItem } from "@material-ui/core";
+import {
+  Typography,
+  Paper,
+  Avatar,
+  List,
+  ListItem,
+  Fab,
+} from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import SearchBar from "../SearchBar";
 import CardItem from "../CardItem";
@@ -77,6 +84,21 @@ function Profile(props) {
       });
   }
 
+  function deleteFromView(id) {
+    let aux;
+    if (typeOfContent === "movies") {
+      aux = profileMovies.filter((item) => {
+        return item.id !== id;
+      });
+      setProfileMovies(aux);
+    } else {
+      aux = profileSeries.filter((item) => {
+        return item.id !== id;
+      });
+      setProfileSeries(aux);
+    }
+  }
+
   async function fetchItemsData(moviesList, seriesList) {
     if (moviesList.length !== 0) {
       moviesList.forEach((movie_id) => {
@@ -89,6 +111,39 @@ function Profile(props) {
       });
     }
     setDataFetched(true);
+  }
+
+  function deleteRepeatedItems() {
+    if (profileMovies.length !== 0) {
+      let uniqueMovies = profileMovies.filter(
+        (currentValue, currentIndex, itemsArray) => {
+          return (
+            itemsArray.findIndex(
+              (valorDelArreglo) =>
+                JSON.stringify(valorDelArreglo) === JSON.stringify(currentValue)
+            ) === currentIndex
+          );
+        }
+      );
+      if (uniqueMovies.length !== profileMovies.length) {
+        setProfileMovies(uniqueMovies);
+      }
+    }
+    if (profileSeries.length !== 0) {
+      let uniqueSeries = profileSeries.filter(
+        (currentValue, currentIndex, itemsArray) => {
+          return (
+            itemsArray.findIndex(
+              (valorDelArreglo) =>
+                JSON.stringify(valorDelArreglo) === JSON.stringify(currentValue)
+            ) === currentIndex
+          );
+        }
+      );
+      if (uniqueSeries.length !== profileSeries.length) {
+        setProfileMovies(uniqueSeries);
+      }
+    }
   }
 
   // eslint-disable-next-line
@@ -110,24 +165,7 @@ function Profile(props) {
       }
     });
 
-    if (profileMovies.length !== 0) {
-      let uniqueMovies = profileMovies.filter(
-        (valorActual, indiceActual, arreglo) => {
-          return (
-            arreglo.findIndex(
-              (valorDelArreglo) =>
-                JSON.stringify(valorDelArreglo) === JSON.stringify(valorActual)
-            ) === indiceActual
-          );
-        }
-      );
-
-      if (uniqueMovies.length !== profileMovies.length) {
-        setProfileMovies(uniqueMovies);
-      }
-    }
-
-    // eslint-disable-next-line
+    deleteRepeatedItems();
   });
 
   return (
@@ -145,7 +183,7 @@ function Profile(props) {
           {profileName !== "" ? profileName : "User"}
         </Typography>
         {isUserLoggedIn ? (
-          <SearchBar dataFetcher={dataFetched} />
+          <SearchBar dataFetcher={fetchId} />
         ) : (
           <Typography> No estás logueado cruck</Typography>
         )}
@@ -174,6 +212,7 @@ function Profile(props) {
                         overview={movie.overview}
                         poster_path={movie.poster_path}
                         isUserLoggedIn={isUserLoggedIn}
+                        onDeleteFromView={deleteFromView}
                       />
                     </ListItem>
                   ))
@@ -185,6 +224,7 @@ function Profile(props) {
                         overview={serie.overview}
                         poster_path={serie.poster_path}
                         isUserLoggedIn={isUserLoggedIn}
+                        onDeleteFromView={deleteFromView}
                       />
                     </ListItem>
                   ))}
@@ -193,6 +233,9 @@ function Profile(props) {
         ) : (
           <Typography> Cargando contenido </Typography>
         )}
+        <Fab size="medium" color="primary">
+          <PersonIcon></PersonIcon>
+        </Fab>
       </Paper>
     </main>
   );
