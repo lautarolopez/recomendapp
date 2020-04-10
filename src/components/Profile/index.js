@@ -45,6 +45,17 @@ const styles = (theme) => ({
   submit: {
     marginTop: theme.spacing() * 3,
   },
+  toggleSticky: {
+    position: "sticky",
+    top: "15px",
+    zIndex: 15,
+  },
+  floatFab: {
+    position: "fixed",
+    bottom: "15px",
+    right: "15px",
+    zIndex: 15,
+  },
 });
 
 function Profile(props) {
@@ -194,6 +205,7 @@ function Profile(props) {
               value={typeOfContent}
               exclusive
               onChange={handleTypeOfContent}
+              className={classes.toggleSticky}
             >
               <ToggleButton value="movies" aria-label="Movies">
                 Pelis
@@ -233,7 +245,7 @@ function Profile(props) {
         ) : (
           <Typography> Cargando contenido </Typography>
         )}
-        <Fab size="medium" color="primary">
+        <Fab size="medium" color="primary" className={classes.floatFab}>
           <PersonIcon></PersonIcon>
         </Fab>
       </Paper>
