@@ -13,6 +13,7 @@ import SearchBar from "../SearchBar";
 import CardItem from "../CardItem";
 import HeadBar from "../HeadBar";
 import PersonIcon from "@material-ui/icons/Person";
+import ShareIcon from "@material-ui/icons/Share";
 import withStyles from "@material-ui/core/styles/withStyles";
 import firebase from "../firebase";
 import { withRouter } from "react-router-dom";
@@ -30,13 +31,10 @@ const styles = (theme) => ({
     },
   },
   paper: {
-    marginTop: theme.spacing() * 8,
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: `${theme.spacing() * 2}px ${theme.spacing() * 3}px ${
-      theme.spacing() * 3
-    }px`,
+    padding: "30px 24px 24px",
   },
   avatar: {
     margin: theme.spacing(),
@@ -52,9 +50,23 @@ const styles = (theme) => ({
   },
   floatFab: {
     position: "fixed",
-    bottom: "15px",
-    right: "15px",
+    bottom: "25px",
+    right: "25px",
     zIndex: 15,
+  },
+  itemsList: {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "center",
+  },
+  item: {
+    width: "33%",
+    [theme.breakpoints.down(1200)]: {
+      width: "50%",
+    },
+    [theme.breakpoints.down(850)]: {
+      width: "60%",
+    },
   },
 });
 
@@ -121,7 +133,6 @@ function Profile(props) {
         fetchId(serie_id, "tv");
       });
     }
-    setDataFetched(true);
   }
 
   function deleteRepeatedItems() {
@@ -175,7 +186,7 @@ function Profile(props) {
           });
       }
     });
-
+    setDataFetched(true);
     deleteRepeatedItems();
   });
 
@@ -214,10 +225,11 @@ function Profile(props) {
                 Series
               </ToggleButton>
             </ToggleButtonGroup>
-            <List>
-              {typeOfContent === "movies"
-                ? profileMovies.map((movie) => (
-                    <ListItem key={movie.id}>
+            <List className={classes.itemsList}>
+              {typeOfContent === "movies" ? (
+                profileMovies.length !== 0 ? (
+                  profileMovies.map((movie) => (
+                    <ListItem key={movie.id} className={classes.item}>
                       <CardItem
                         id={movie.id}
                         title={movie.title}
@@ -228,25 +240,32 @@ function Profile(props) {
                       />
                     </ListItem>
                   ))
-                : profileSeries.map((serie) => (
-                    <ListItem key={serie.id}>
-                      <CardItem
-                        id={serie.id}
-                        title={serie.name}
-                        overview={serie.overview}
-                        poster_path={serie.poster_path}
-                        isUserLoggedIn={isUserLoggedIn}
-                        onDeleteFromView={deleteFromView}
-                      />
-                    </ListItem>
-                  ))}
+                ) : (
+                  <ListItem>No hay películas para mostrar :(</ListItem>
+                )
+              ) : profileSeries.length !== 0 ? (
+                profileSeries.map((serie) => (
+                  <ListItem key={serie.id}>
+                    <CardItem
+                      id={serie.id}
+                      title={serie.name}
+                      overview={serie.overview}
+                      poster_path={serie.poster_path}
+                      isUserLoggedIn={isUserLoggedIn}
+                      onDeleteFromView={deleteFromView}
+                    />
+                  </ListItem>
+                ))
+              ) : (
+                <ListItem>No hay series para mostrar :(</ListItem>
+              )}
             </List>
           </>
         ) : (
           <Typography> Cargando contenido </Typography>
         )}
         <Fab size="medium" color="primary" className={classes.floatFab}>
-          <PersonIcon></PersonIcon>
+          <ShareIcon></ShareIcon>
         </Fab>
       </Paper>
     </main>

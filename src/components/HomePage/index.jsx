@@ -28,7 +28,7 @@ const styles = (theme) => ({
   },
   avatar: {
     margin: theme.spacing(),
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: theme.palette.primary.main,
   },
   submit: {
     marginTop: theme.spacing() * 3,
@@ -57,14 +57,18 @@ function HomePage(props) {
           <Avatar className={classes.avatar}>
             <VerifiedUserOutlined />
           </Avatar>
-          <Typography component="h1" variant="h5">
-            Hello Guest!
+          <Typography component="h1" variant="h3">
+            RecomendApp
+          </Typography>
+          <Typography component="p">
+            RecomendApp es una aplicación para guardar esas películas que te
+            gustaron, y compartir tu perfil cuando te pidan recomendaciones!
           </Typography>
           <Button
             type="submit"
             fullWidth
             variant="contained"
-            color="secondary"
+            color="primary"
             component={Link}
             to="/register"
             className={classes.submit}
@@ -75,7 +79,7 @@ function HomePage(props) {
             type="submit"
             fullWidth
             variant="contained"
-            color="secondary"
+            color="primary"
             component={Link}
             to="/login"
             className={classes.submit}

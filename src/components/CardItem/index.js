@@ -1,13 +1,13 @@
 import React from "react";
 import "./styles.css";
 import {
-  Typography,
   Card,
   CardHeader,
   CardContent,
   CardActions,
   Button,
 } from "@material-ui/core";
+import ReadMoreReact from "read-more-react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import firebase from "../firebase";
 import { withRouter } from "react-router-dom";
@@ -24,33 +24,79 @@ const styles = (theme) => ({
       marginRight: "auto",
     },
   },
+  title: {
+    paddingBottom: 0,
+  },
+  card: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    [theme.breakpoints.up(800)]: {
+      flexDirection: "row",
+      maxWidth: "450px",
+    },
+  },
+  cardImage: {
+    width: "60%",
+    margin: "15px 0 auto 16px",
+    [theme.breakpoints.up(800)]: {
+      width: "35%",
+    },
+  },
+  cardContent: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+  },
+  contentContainer: {
+    paddingTop: "5px",
+  },
+  buttons: {
+    display: "flex",
+    justifyContent: "center",
+  },
 });
 
 function CardItem(props) {
   const { classes } = props;
   return (
     <Card variant="outlined" className={classes.card}>
-      <CardHeader title={props.title}> </CardHeader>
-      <CardContent>
-        <Typography variant="body2" component="p">
-          {props.overview}
-        </Typography>
-        <img
-          src={
-            props.poster_path !== null
-              ? "https://image.tmdb.org/t/p/w500" + props.poster_path
-              : "https://www.themoviedb.org/assets/2/v4/logos/208x226-stacked-green-9484383bd9853615c113f020def5cbe27f6d08a84ff834f41371f223ebad4a3c.png"
-          }
-          alt={props.title}
-        />
-        <CardActions>
-          {props.isUserLoggedIn ? (
-            <Button onClick={removeFromList}>Quitar de mi lista</Button>
-          ) : (
-            <Button>Agregar a mi lista</Button>
-          )}
-        </CardActions>
-      </CardContent>
+      <img
+        src={
+          props.poster_path !== null
+            ? "https://image.tmdb.org/t/p/w500" + props.poster_path
+            : "https://www.themoviedb.org/assets/2/v4/logos/208x226-stacked-green-9484383bd9853615c113f020def5cbe27f6d08a84ff834f41371f223ebad4a3c.png"
+        }
+        alt={props.title}
+        className={classes.cardImage}
+      />
+      <div className={classes.cardContent}>
+        <CardHeader title={props.title} className={classes.title}></CardHeader>
+        <CardContent className={classes.contentContainer}>
+          <ReadMoreReact
+            text={props.overview}
+            min={100}
+            ideal={200}
+            max={450}
+            readMoreText={"ver más"}
+          />
+          <CardActions className={classes.buttons}>
+            {props.isUserLoggedIn ? (
+              <Button
+                variant="outlined"
+                color="secondary"
+                onClick={removeFromList}
+              >
+                Quitar de mi lista
+              </Button>
+            ) : (
+              <Button variant="outlined" color="primary">
+                Agregar a mi lista
+              </Button>
+            )}
+          </CardActions>
+        </CardContent>
+      </div>
     </Card>
   );
 
