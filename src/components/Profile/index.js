@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./styles.css";
-import { Typography, Paper, Avatar, Fab } from "@material-ui/core";
+import { Typography, Paper, Avatar, Fab, Popover } from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import SearchBar from "../SearchBar";
 import ContentList from "../ContentList";
@@ -42,6 +42,9 @@ const styles = (theme) => ({
     right: "25px",
     zIndex: 15,
   },
+  none: {
+    display: "none",
+  },
 });
 
 function Profile(props) {
@@ -53,10 +56,22 @@ function Profile(props) {
   const [dataFetched, setDataFetched] = useState(false);
   const [profilePicture, setProfilePicture] = useState("");
   const [profileName, setProfileName] = useState("");
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleTypeOfContent = (event, newTypeOfContent) => {
     setTypeOfContent(newTypeOfContent);
   };
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
 
   async function fetchId(id, type) {
     await fetch(
@@ -178,10 +193,13 @@ function Profile(props) {
         <Typography component="h1" variant="h5" align="center">
           {profileName !== "" ? profileName : "User"}
         </Typography>
-        {isUserLoggedIn ? (
+        {isUserLoggedIn &&
+        firebase.getCurrentUserId() === props.match.params.id ? (
           <SearchBar dataFetcher={fetchId} />
         ) : (
-          <Typography> No estás logueado cruck</Typography>
+          <Typography className={classes.none}>
+            No estás logueado cruck
+          </Typography>
         )}
         <br />
         {dataFetched ? (
@@ -213,7 +231,24 @@ function Profile(props) {
         )}
         <CopyToClipboard text={window.location.href}>
           <Fab size="medium" color="primary" className={classes.floatFab}>
-            <ShareIcon></ShareIcon>
+            <ShareIcon onClick={handleClick}></ShareIcon>
+            <Popover
+              id={id}
+              open={open}
+              anchorEl={anchorEl}
+              onClose={handleClose}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "center",
+              }}
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "center",
+              }}
+            >
+              {" "}
+              <Typography component="p">Copiado al portapapeles.</Typography>
+            </Popover>
           </Fab>
         </CopyToClipboard>
       </Paper>
