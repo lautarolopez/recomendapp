@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
-import "./styles.css";
-import { Typography, Paper, Avatar, Fab, Popover } from "@material-ui/core";
+import { Typography, Paper, Avatar } from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import SearchBar from "../SearchBar";
 import ContentList from "../ContentList";
 import HeadBar from "../HeadBar";
+import FloatingButton from "../FloatingButton";
 import PersonIcon from "@material-ui/icons/Person";
-import ShareIcon from "@material-ui/icons/Share";
 import withStyles from "@material-ui/core/styles/withStyles";
 import firebase from "../firebase";
 import { withRouter } from "react-router-dom";
-import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const styles = (theme) => ({
   main: {
@@ -36,12 +34,6 @@ const styles = (theme) => ({
     top: "15px",
     zIndex: 15,
   },
-  floatFab: {
-    position: "fixed",
-    bottom: "25px",
-    right: "25px",
-    zIndex: 15,
-  },
   none: {
     display: "none",
   },
@@ -56,22 +48,10 @@ function Profile(props) {
   const [dataFetched, setDataFetched] = useState(false);
   const [profilePicture, setProfilePicture] = useState("");
   const [profileName, setProfileName] = useState("");
-  const [anchorEl, setAnchorEl] = useState(null);
 
   const handleTypeOfContent = (event, newTypeOfContent) => {
     setTypeOfContent(newTypeOfContent);
   };
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const id = open ? "simple-popover" : undefined;
 
   async function fetchId(id, type) {
     await fetch(
@@ -229,28 +209,7 @@ function Profile(props) {
         ) : (
           <Typography> Cargando contenido </Typography>
         )}
-        <CopyToClipboard text={window.location.href}>
-          <Fab size="medium" color="primary" className={classes.floatFab}>
-            <ShareIcon onClick={handleClick}></ShareIcon>
-            <Popover
-              id={id}
-              open={open}
-              anchorEl={anchorEl}
-              onClose={handleClose}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "center",
-              }}
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "center",
-              }}
-            >
-              {" "}
-              <Typography component="p">Copiado al portapapeles.</Typography>
-            </Popover>
-          </Fab>
-        </CopyToClipboard>
+        <FloatingButton />
       </Paper>
     </main>
   );
