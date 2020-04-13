@@ -1,16 +1,9 @@
 import React, { useEffect, useState } from "react";
 import "./styles.css";
-import {
-  Typography,
-  Paper,
-  Avatar,
-  List,
-  ListItem,
-  Fab,
-} from "@material-ui/core";
+import { Typography, Paper, Avatar, Fab } from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import SearchBar from "../SearchBar";
-import CardItem from "../CardItem";
+import ContentList from "../ContentList";
 import HeadBar from "../HeadBar";
 import PersonIcon from "@material-ui/icons/Person";
 import ShareIcon from "@material-ui/icons/Share";
@@ -47,22 +40,6 @@ const styles = (theme) => ({
     bottom: "25px",
     right: "25px",
     zIndex: 15,
-  },
-  itemsList: {
-    width: "100%",
-    display: "flex",
-    flexWrap: "wrap",
-    justifyContent: "center",
-  },
-  item: {
-    width: "33%",
-    justifyContent: "center",
-    [theme.breakpoints.down(1200)]: {
-      width: "50%",
-    },
-    [theme.breakpoints.down(850)]: {
-      width: "100%",
-    },
   },
 });
 
@@ -221,45 +198,13 @@ function Profile(props) {
                 Series
               </ToggleButton>
             </ToggleButtonGroup>
-            <List className={classes.itemsList}>
-              {typeOfContent === "movies" ? (
-                profileMovies.length !== 0 ? (
-                  profileMovies.map((movie) => (
-                    <ListItem key={movie.id} className={classes.item}>
-                      <CardItem
-                        id={movie.id}
-                        title={movie.title}
-                        overview={movie.overview}
-                        poster_path={movie.poster_path}
-                        isUserLoggedIn={isUserLoggedIn}
-                        onDeleteFromView={deleteFromView}
-                      />
-                    </ListItem>
-                  ))
-                ) : (
-                  <ListItem className={classes.item}>
-                    No hay películas para mostrar :(
-                  </ListItem>
-                )
-              ) : profileSeries.length !== 0 ? (
-                profileSeries.map((serie) => (
-                  <ListItem key={serie.id} className={classes.item}>
-                    <CardItem
-                      id={serie.id}
-                      title={serie.name}
-                      overview={serie.overview}
-                      poster_path={serie.poster_path}
-                      isUserLoggedIn={isUserLoggedIn}
-                      onDeleteFromView={deleteFromView}
-                    />
-                  </ListItem>
-                ))
-              ) : (
-                <ListItem className={classes.item}>
-                  No hay series para mostrar :(
-                </ListItem>
-              )}
-            </List>
+            <ContentList
+              typeOfContent={typeOfContent}
+              profileMovies={profileMovies}
+              profileSeries={profileSeries}
+              isUserLoggedIn={isUserLoggedIn}
+              deleteFromView={deleteFromView}
+            />
           </>
         ) : (
           <Typography> Cargando contenido </Typography>

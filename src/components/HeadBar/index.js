@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Typography,
-  Button,
-  IconButton,
-  AppBar,
-  Toolbar,
-} from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
+import { Typography, Button, AppBar, Toolbar } from "@material-ui/core";
 import withStyles from "@material-ui/core/styles/withStyles";
 import firebase from "../firebase";
 import { withRouter } from "react-router-dom";
@@ -15,11 +8,22 @@ const styles = (theme) => ({
   root: {
     flexGrow: 1,
   },
-  menuButton: {
-    marginRight: theme.spacing(2),
+  container: {
+    display: "flex",
+    justifyContent: "space-between",
+  },
+  logo: {
+    display: "inline",
+    borderRadius: "5px",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    border: "solid 1px white",
+    width: "20px",
+    height: "40px",
+    padding: "0 3px",
   },
   title: {
-    flexGrow: 1,
+    color: "white",
   },
 });
 
@@ -34,17 +38,10 @@ function HeadBar(props) {
   return (
     <div className={classes.root}>
       <AppBar position="sticky">
-        <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-            <MenuIcon />
-          </IconButton>
+        <Toolbar className={classes.container}>
           <Typography variant="h6" className={classes.title}>
-            RecomendApp
+            <div className={classes.logo}>R</div>
+            ecomendApp
           </Typography>
           {props.isUserLoggedIn ? (
             <Button
