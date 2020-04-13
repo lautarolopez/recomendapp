@@ -1,48 +1,54 @@
-import React, { useState, useEffect } from "react";
-import { Typography, Paper, Avatar, Button } from "@material-ui/core";
-import VerifiedUserOutlined from "@material-ui/icons/VerifiedUserOutlined";
+import React, { useEffect } from "react";
+import { Typography, Paper } from "@material-ui/core";
+import HeadBar from "../HeadBar";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { Link } from "react-router-dom";
 import firebase from "../firebase";
 
 const styles = (theme) => ({
   main: {
-    width: "auto",
-    display: "block",
-    marginLeft: theme.spacing() * 3,
-    marginRight: theme.spacing() * 3,
-    [theme.breakpoints.up(400 + theme.spacing() * 3 * 2)]: {
-      width: 400,
-      marginLeft: "auto",
-      marginRight: "auto",
-    },
+    width: "100%",
+    backgroundImage:
+      "url(https://firebasestorage.googleapis.com/v0/b/recomendap.appspot.com/o/series-netflix.jpg?alt=media&token=5b01bd73-7e7e-46fc-b302-744ce23535f5)",
   },
   paper: {
-    marginTop: theme.spacing() * 8,
+    backgroundColor: "rgba(0,0,0,0.3)",
+    backgroundPosition: "center",
+    backgroundSize: "cover",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    padding: `${theme.spacing() * 2}px ${theme.spacing() * 3}px ${
-      theme.spacing() * 3
-    }px`,
-  },
-  avatar: {
-    margin: theme.spacing(),
-    backgroundColor: theme.palette.primary.main,
+    justifyContent: "center",
+    padding: "30px",
+    height: "100vh",
   },
   submit: {
     marginTop: theme.spacing() * 3,
+  },
+  logo: {
+    display: "inline",
+    borderRadius: "5px",
+    backgroundColor: theme.palette.primary.main,
+    color: "white",
+    width: "40px",
+    height: "40px",
+    padding: "0 10px",
+  },
+  title: {
+    color: "white",
+  },
+  appDescription: {
+    color: "white",
+    textAlign: "center",
+    margin: "25px auto",
   },
 });
 
 function HomePage(props) {
   const { classes } = props;
-  const [isUserLoggedIn, setUserLoggedIn] = useState(false);
 
   // eslint-disable-next-line
   useEffect(() => {
     if (firebase.getCurrentUsername()) {
-      setUserLoggedIn(true);
       props.history.replace("/profile/" + firebase.getCurrentUserId());
     }
     // eslint-disable-next-line
@@ -50,44 +56,17 @@ function HomePage(props) {
 
   return (
     <main className={classes.main}>
-      {isUserLoggedIn ? (
-        <p>Redirección a dashboard</p>
-      ) : (
-        <Paper className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <VerifiedUserOutlined />
-          </Avatar>
-          <Typography component="h1" variant="h3">
-            RecomendApp
-          </Typography>
-          <Typography component="p">
-            RecomendApp es una aplicación para guardar esas películas que te
-            gustaron, y compartir tu perfil cuando te pidan recomendaciones!
-          </Typography>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            component={Link}
-            to="/register"
-            className={classes.submit}
-          >
-            Register
-          </Button>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            component={Link}
-            to="/login"
-            className={classes.submit}
-          >
-            Login
-          </Button>
-        </Paper>
-      )}
+      <HeadBar />
+      <Paper className={classes.paper}>
+        <Typography component="h1" variant="h3" className={classes.title}>
+          <div className={classes.logo}>R</div>
+          ecomendApp
+        </Typography>
+        <Typography component="p" className={classes.appDescription}>
+          RecomendApp es una aplicación para guardar esas películas que te
+          gustaron, y compartir tu perfil cuando te pidan recomendaciones!
+        </Typography>
+      </Paper>
     </main>
   );
 }

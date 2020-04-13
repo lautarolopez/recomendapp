@@ -21,17 +21,11 @@ import { withRouter } from "react-router-dom";
 const styles = (theme) => ({
   main: {
     width: "100%",
-    display: "block", // Fix IE 11 issue.
-    marginLeft: theme.spacing() * 3,
-    marginRight: theme.spacing() * 3,
-    [theme.breakpoints.up(400 + theme.spacing() * 3 * 2)]: {
-      width: "100%",
-      marginLeft: "auto",
-      marginRight: "auto",
-    },
+    display: "block",
   },
   paper: {
     display: "flex",
+    height: "auto",
     flexDirection: "column",
     alignItems: "center",
     padding: "30px 24px 24px",
@@ -55,17 +49,19 @@ const styles = (theme) => ({
     zIndex: 15,
   },
   itemsList: {
+    width: "100%",
     display: "flex",
     flexWrap: "wrap",
     justifyContent: "center",
   },
   item: {
     width: "33%",
+    justifyContent: "center",
     [theme.breakpoints.down(1200)]: {
       width: "50%",
     },
     [theme.breakpoints.down(850)]: {
-      width: "60%",
+      width: "100%",
     },
   },
 });
@@ -241,11 +237,13 @@ function Profile(props) {
                     </ListItem>
                   ))
                 ) : (
-                  <ListItem>No hay películas para mostrar :(</ListItem>
+                  <ListItem className={classes.item}>
+                    No hay películas para mostrar :(
+                  </ListItem>
                 )
               ) : profileSeries.length !== 0 ? (
                 profileSeries.map((serie) => (
-                  <ListItem key={serie.id}>
+                  <ListItem key={serie.id} className={classes.item}>
                     <CardItem
                       id={serie.id}
                       title={serie.name}
@@ -257,7 +255,9 @@ function Profile(props) {
                   </ListItem>
                 ))
               ) : (
-                <ListItem>No hay series para mostrar :(</ListItem>
+                <ListItem className={classes.item}>
+                  No hay series para mostrar :(
+                </ListItem>
               )}
             </List>
           </>

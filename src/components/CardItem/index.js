@@ -38,9 +38,9 @@ const styles = (theme) => ({
   },
   cardImage: {
     width: "60%",
-    margin: "15px 0 auto 16px",
     [theme.breakpoints.up(800)]: {
       width: "35%",
+      margin: "15px 0 auto 16px",
     },
   },
   cardContent: {
