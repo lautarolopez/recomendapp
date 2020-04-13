@@ -10,6 +10,7 @@ import ShareIcon from "@material-ui/icons/Share";
 import withStyles from "@material-ui/core/styles/withStyles";
 import firebase from "../firebase";
 import { withRouter } from "react-router-dom";
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 const styles = (theme) => ({
   main: {
@@ -210,9 +211,11 @@ function Profile(props) {
         ) : (
           <Typography> Cargando contenido </Typography>
         )}
-        <Fab size="medium" color="primary" className={classes.floatFab}>
-          <ShareIcon></ShareIcon>
-        </Fab>
+        <CopyToClipboard text={window.location.href}>
+          <Fab size="medium" color="primary" className={classes.floatFab}>
+            <ShareIcon></ShareIcon>
+          </Fab>
+        </CopyToClipboard>
       </Paper>
     </main>
   );
