@@ -82,23 +82,32 @@ function CardItem(props) {
           />
           <CardActions className={classes.buttons}>
             {props.isUserLoggedIn ? (
-              <Button
-                variant="outlined"
-                color="secondary"
-                onClick={removeFromList}
-              >
-                Quitar de mi lista
-              </Button>
+              props.ownProfile ? (
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={removeFromList}
+                >
+                  Quitar de mi lista
+                </Button>
+              ) : (
+                <Button variant="outlined" color="primary" onClick={addToList}>
+                  Agregar a mi lista
+                </Button>
+              )
             ) : (
-              <Button variant="outlined" color="primary">
-                Agregar a mi lista
-              </Button>
+              <Button>HOLIS</Button>
             )}
           </CardActions>
         </CardContent>
       </div>
     </Card>
   );
+
+  function addToList(e) {
+    e.preventDefault();
+    firebase.storeNewItemWithId(props.id, props.itemType);
+  }
 
   function removeFromList(e) {
     e.preventDefault();

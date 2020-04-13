@@ -63,7 +63,7 @@ function SignIn(props) {
 
   useEffect(() => {
     if (firebase.getCurrentUsername()) {
-      props.history.replace("/dashboard");
+      props.history.replace("/profile/" + firebase.getCurrentUserId());
     }
   });
 

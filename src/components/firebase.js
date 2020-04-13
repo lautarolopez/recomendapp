@@ -142,6 +142,25 @@ class Firebase {
     }
   }
 
+  storeNewItemWithId(id, type) {
+    let user = this.db.collection("users").doc(this.auth.currentUser.uid);
+    user.get().then((userDB) => {
+      if (userDB.exists) {
+        let aux = userDB.data();
+        if (type === "movies") {
+          if (!aux.movies.includes(id)) {
+            aux.movies.push(id);
+          }
+        } else if (type === "series") {
+          if (!aux.series.includes(id)) {
+            aux.series.push(id);
+          }
+        }
+        this.db.collection("users").doc(this.auth.currentUser.uid).set(aux);
+      }
+    });
+  }
+
   storeNewItem(item) {
     let user = this.db.collection("users").doc(this.auth.currentUser.uid);
     user.get().then((userDB) => {

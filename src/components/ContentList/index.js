@@ -34,10 +34,12 @@ function ContentList(props) {
             <ListItem key={movie.id} className={classes.item}>
               <CardItem
                 id={movie.id}
+                itemType={props.typeOfContent}
                 title={movie.title}
                 overview={movie.overview}
                 poster_path={movie.poster_path}
                 isUserLoggedIn={props.isUserLoggedIn}
+                ownProfile={props.ownProfile}
                 onDeleteFromView={props.deleteFromView}
               />
             </ListItem>
@@ -52,10 +54,12 @@ function ContentList(props) {
           <ListItem key={serie.id} className={classes.item}>
             <CardItem
               id={serie.id}
+              itemType={props.typeOfContent}
               title={serie.name}
               overview={serie.overview}
               poster_path={serie.poster_path}
               isUserLoggedIn={props.isUserLoggedIn}
+              ownProfile={props.ownProfile}
               onDeleteFromView={props.deleteFromView}
             />
           </ListItem>

@@ -129,8 +129,8 @@ function Register(props) {
   async function onRegister() {
     try {
       await firebase.register(name, email, password);
-      await firebase.addNewUserToDatabase("");
-      props.history.replace("/dashboard");
+      await firebase.addNewUserToDatabase("", name);
+      props.history.replace("/profile/" + firebase.getCurrentUserId());
     } catch (error) {
       alert(error.message);
     }

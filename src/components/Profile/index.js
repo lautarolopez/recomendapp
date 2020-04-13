@@ -203,6 +203,7 @@ function Profile(props) {
               profileMovies={profileMovies}
               profileSeries={profileSeries}
               isUserLoggedIn={isUserLoggedIn}
+              ownProfile={firebase.getCurrentUserId() === props.match.params.id}
               deleteFromView={deleteFromView}
             />
           </>
