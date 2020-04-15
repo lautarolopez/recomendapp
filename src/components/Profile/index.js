@@ -4,6 +4,7 @@ import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import SearchBar from "../SearchBar";
 import ContentList from "../ContentList";
 import HeadBar from "../HeadBar";
+import ModalButton from "../ModalButton";
 import FloatingButton from "../FloatingButton";
 import PersonIcon from "@material-ui/icons/Person";
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -177,9 +178,7 @@ function Profile(props) {
         firebase.getCurrentUserId() === props.match.params.id ? (
           <SearchBar dataFetcher={fetchId} />
         ) : (
-          <Typography className={classes.none}>
-            No estás logueado cruck
-          </Typography>
+          <ModalButton profileId={props.match.params.id} />
         )}
         <br />
         {dataFetched ? (
