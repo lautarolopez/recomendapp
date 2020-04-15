@@ -156,7 +156,7 @@ function ModalButton(props) {
               </>
             ) : (
               <>
-                <SearchBar dataFetcher={fetchId} />
+                <SearchBar dataFetcher={fetchId} store={false} />
                 {itemError && (
                   <Typography component="p" className={classes.error}>
                     Por favor elegí algo para recomendar!

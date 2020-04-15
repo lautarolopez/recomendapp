@@ -176,7 +176,7 @@ function Profile(props) {
         </Typography>
         {isUserLoggedIn &&
         firebase.getCurrentUserId() === props.match.params.id ? (
-          <SearchBar dataFetcher={fetchId} />
+          <SearchBar dataFetcher={fetchId} store={true} />
         ) : (
           <ModalButton profileId={props.match.params.id} />
         )}
