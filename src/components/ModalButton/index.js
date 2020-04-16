@@ -86,11 +86,14 @@ function ModalButton(props) {
         .doc(props.profileId)
         .collection("recommendations")
         .add({
+          type: recommendedItem.type,
           title: recommendedItem.title,
           poster: recommendedItem.poster,
           description: recommendedItem.description,
           message: message,
           isOnNetflix: isOnNetflix,
+          user_name: firebase.getCurrentUsername(),
+          user_avatar: firebase.getCurrentUserPhoto(),
         });
       handleClose();
     } else {
@@ -112,6 +115,7 @@ function ModalButton(props) {
       })
       .then(function (data) {
         setRecommendedItem({
+          type: data.title ? "movie" : "serie",
           title: data.title ? data.title : data.name,
           poster: data.poster_path ? data.poster_path : "",
           description: data.overview ? data.overview : "",
@@ -124,7 +128,8 @@ function ModalButton(props) {
 
   return (
     <>
-      <Button variant="contained" color="primary" onClick={handleOpen}>
+      <br />
+      <Button variant="outlined" color="primary" onClick={handleOpen}>
         Recomendame algo!
       </Button>
       <Modal

@@ -49,7 +49,7 @@ function HomePage(props) {
   // eslint-disable-next-line
   useEffect(() => {
     if (firebase.getCurrentUsername()) {
-      props.history.replace("/profile/" + firebase.getCurrentUserId());
+      props.history.replace("/perfil/" + firebase.getCurrentUserId());
     }
     // eslint-disable-next-line
   });

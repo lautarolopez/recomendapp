@@ -1,13 +1,16 @@
 import React from "react";
-import "./styles.css";
 import {
   Card,
   CardHeader,
   CardContent,
   CardActions,
   Button,
+  Divider,
+  Typography,
+  Avatar,
 } from "@material-ui/core";
 import ReadMoreReact from "read-more-react";
+import PersonIcon from "@material-ui/icons/Person";
 import withStyles from "@material-ui/core/styles/withStyles";
 import firebase from "../firebase";
 import { withRouter } from "react-router-dom";
@@ -53,13 +56,24 @@ const styles = (theme) => ({
     paddingTop: "5px",
   },
   buttons: {
+    marginTop: "15px",
     display: "flex",
-    justifyContent: "center",
+    flexDirection: "column",
+    aliginItems: "center",
+  },
+  button: {
+    marginTop: "10px",
+  },
+  userRecommending: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
 });
 
-function CardItem(props) {
+function CardRecommendation(props) {
   const { classes } = props;
+
   return (
     <Card variant="outlined" className={classes.card}>
       <img
@@ -81,31 +95,48 @@ function CardItem(props) {
             max={450}
             readMoreText={"ver más"}
           />
+          <br />
+          <Divider variant="middle" />
+          <br />
+          <section className={classes.userRecommending}>
+            {props.user_poster !== "" ? (
+              <Avatar
+                alt="profile"
+                src={props.user_poster}
+                className={classes.large}
+              />
+            ) : (
+              <Avatar>
+                <PersonIcon />
+              </Avatar>
+            )}
+            <Typography component="h1" variant="h5" align="center">
+              {props.user_name}
+            </Typography>
+            <Typography component="p">{props.message}</Typography>
+          </section>
           <CardActions className={classes.buttons}>
-            {props.isUserLoggedIn &&
-              (props.ownProfile ? (
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  onClick={removeFromList}
-                >
-                  Quitar de mi lista
-                </Button>
-              ) : (
-                <Button variant="outlined" color="primary" onClick={addToList}>
-                  Agregar a mi lista
-                </Button>
-              ))}
+            <Button
+              variant="outlined"
+              className={classes.button}
+              color="primary"
+              onClick={removeFromList}
+            >
+              Agregar a mi lista
+            </Button>
+            <Button
+              variant="outlined"
+              className={classes.button}
+              color="secondary"
+              onClick={removeFromList}
+            >
+              Eliminar
+            </Button>
           </CardActions>
         </CardContent>
       </div>
     </Card>
   );
-
-  function addToList(e) {
-    e.preventDefault();
-    firebase.storeNewItemWithId(props.id, props.itemType);
-  }
 
   function removeFromList(e) {
     e.preventDefault();
@@ -114,4 +145,4 @@ function CardItem(props) {
   }
 }
 
-export default withRouter(withStyles(styles)(CardItem));
+export default withRouter(withStyles(styles)(CardRecommendation));

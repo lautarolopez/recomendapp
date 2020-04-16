@@ -4,6 +4,7 @@ import HomePage from "../HomePage";
 import Login from "../Login";
 import Register from "../Register";
 import Profile from "../Profile";
+import Recommendations from "../Recommendations";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { purple } from "@material-ui/core/colors/purple";
 import { CssBaseline, CircularProgress } from "@material-ui/core";
@@ -31,10 +32,14 @@ export default function App() {
       <Router>
         <Switch>
           <Route exact path="/" component={HomePage} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/register" component={Register} />
-          <Route exact path="/profile" component={Profile} />
-          <Route exact path="/profile/:id" component={Profile} />
+          <Route exact path="/ingresar" component={Login} />
+          <Route exact path="/registrarse" component={Register} />
+          <Route
+            exact
+            path="/mis-recomendaciones"
+            component={Recommendations}
+          />
+          <Route exact path="/perfil/:id" component={Profile} />
         </Switch>
       </Router>
     </MuiThemeProvider>

@@ -130,7 +130,7 @@ function Register(props) {
     try {
       await firebase.register(name, email, password);
       await firebase.addNewUserToDatabase("", name);
-      props.history.replace("/profile/" + firebase.getCurrentUserId());
+      props.history.replace("/perfil/" + firebase.getCurrentUserId());
     } catch (error) {
       alert(error.message);
     }

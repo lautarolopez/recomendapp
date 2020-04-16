@@ -15,32 +15,8 @@ import firebase from "../firebase";
 import { withRouter } from "react-router-dom";
 
 const styles = (theme) => ({
-  main: {
-    width: "auto",
-    display: "block", // Fix IE 11 issue.
-    marginLeft: theme.spacing() * 3,
-    marginRight: theme.spacing() * 3,
-    [theme.breakpoints.up(400 + theme.spacing() * 3 * 2)]: {
-      width: 400,
-      marginLeft: "auto",
-      marginRight: "auto",
-    },
-  },
-  paper: {
-    marginTop: theme.spacing() * 8,
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    padding: `${theme.spacing() * 2}px ${theme.spacing() * 3}px ${
-      theme.spacing() * 3
-    }px`,
-  },
-  avatar: {
-    margin: theme.spacing(),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  submit: {
-    marginTop: theme.spacing() * 3,
+  listItem: {
+    height: "12vh",
   },
 });
 
@@ -54,6 +30,14 @@ function SearchBar(props) {
     search();
     // eslint-disable-next-line
   });
+
+  const formatName = (name, date) => {
+    if (name && date) {
+      let auxName = name.length >= 13 ? name.slice(0, 13) + "..." : name;
+      let auxDate = "(" + date.slice(0, 4) + ")";
+      return auxName + " " + auxDate;
+    }
+  };
 
   return (
     <>
@@ -85,6 +69,7 @@ function SearchBar(props) {
           searchResults.map((item) => (
             <ListItem
               key={item.id}
+              className={classes.listItem}
               onMouseDown={(e) => {
                 e.preventDefault();
                 if (props.store) {
@@ -104,17 +89,10 @@ function SearchBar(props) {
               />
               <ListItemText
                 inset
-                primary={
-                  item.release_date
-                    ? item.name
-                      ? item.name
-                      : item.title + " (" + item.release_date.slice(0, 4) + ")"
-                    : item.name
-                    ? item.first_air_date
-                      ? item.name + " (" + item.first_air_date.slice(0, 4) + ")"
-                      : item.name
-                    : item.title
-                }
+                primary={formatName(
+                  item.title ? item.title : item.name,
+                  item.release_date ? item.release_date : item.first_air_date
+                )}
               />
             </ListItem>
           ))

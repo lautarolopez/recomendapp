@@ -104,6 +104,10 @@ class Firebase {
     return this.auth.currentUser && this.auth.currentUser.uid;
   }
 
+  getCurrentUserPhoto() {
+    return this.auth.currentUser && this.auth.currentUser.photoURL;
+  }
+
   async getUserAvatarWithId(id) {
     let aux;
     let user = this.db.collection("users").doc(id);
@@ -178,6 +182,23 @@ class Firebase {
         this.db.collection("users").doc(this.auth.currentUser.uid).set(aux);
       }
     });
+  }
+
+  async userRecommendations() {
+    let aux = [];
+    let recommendations = this.db
+      .collection("users")
+      .doc(this.auth.currentUser.uid)
+      .collection("recommendations");
+    await recommendations.get().then((snapshot) => {
+      snapshot.forEach((doc) => {
+        aux.push({
+          id: doc.id,
+          data: doc.data(),
+        });
+      });
+    });
+    return aux;
   }
 
   async getUserLists(id) {

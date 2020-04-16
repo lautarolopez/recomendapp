@@ -63,7 +63,7 @@ function SignIn(props) {
 
   useEffect(() => {
     if (firebase.getCurrentUsername()) {
-      props.history.replace("/profile/" + firebase.getCurrentUserId());
+      props.history.replace("/perfil/" + firebase.getCurrentUserId());
     }
   });
 
@@ -151,7 +151,7 @@ function SignIn(props) {
   async function login() {
     try {
       await firebase.login(email, password);
-      props.history.replace("/profile/" + firebase.getCurrentUserId());
+      props.history.replace("/perfil/" + firebase.getCurrentUserId());
     } catch (error) {
       alert(error.message);
     }
@@ -160,14 +160,14 @@ function SignIn(props) {
   async function loginWithGoogle() {
     await firebase.loginWithGoogle((user) => {
       firebase.addNewUserToDatabase(user.photoUrl);
-      props.history.replace("/profile/" + firebase.getCurrentUserId());
+      props.history.replace("/perfil/" + firebase.getCurrentUserId());
     });
   }
 
   async function loginWithFacebook() {
     await firebase.loginWithFacebook().then((user) => {
       firebase.addNewUserToDatabase(user.photoURL, user.displayName);
-      props.history.replace("/profile/" + firebase.getCurrentUserId());
+      props.history.replace("/perfil/" + firebase.getCurrentUserId());
     });
   }
 }

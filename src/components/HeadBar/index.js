@@ -1,5 +1,6 @@
 import React from "react";
 import { Typography, Button, AppBar, Toolbar } from "@material-ui/core";
+import HamburguerMenu from "../HamburguerMenu";
 import withStyles from "@material-ui/core/styles/withStyles";
 import firebase from "../firebase";
 import { withRouter } from "react-router-dom";
@@ -44,21 +45,16 @@ function HeadBar(props) {
             ecomendApp
           </Typography>
           {props.isUserLoggedIn ? (
-            <Button
-              color="inherit"
-              onClick={(e) => {
-                e.preventDefault();
-                logout();
-              }}
-            >
-              Cerrar Sesión
-            </Button>
+            <HamburguerMenu
+              onLogout={logout}
+              id={firebase.getCurrentUserId()}
+            />
           ) : (
             <Button
               color="inherit"
               onClick={(e) => {
                 e.preventDefault();
-                props.history.push("/login");
+                props.history.push("/ingresar");
               }}
             >
               Ingresar
