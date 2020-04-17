@@ -158,16 +158,17 @@ function SignIn(props) {
   }
 
   async function loginWithGoogle() {
-    await firebase.loginWithGoogle((user) => {
-      firebase.addNewUserToDatabase(user.photoUrl);
-      props.history.replace("/perfil/" + firebase.getCurrentUserId());
+    await firebase.loginWithGoogle().then((user) => {
+      console.log(user);
+      firebase.addNewUserToDatabase(user.photoUrl, user.displayName);
+      window.location.replace("/perfil/" + firebase.getCurrentUserId());
     });
   }
 
   async function loginWithFacebook() {
     await firebase.loginWithFacebook().then((user) => {
       firebase.addNewUserToDatabase(user.photoURL, user.displayName);
-      props.history.replace("/perfil/" + firebase.getCurrentUserId());
+      window.location.replace("/perfil/" + firebase.getCurrentUserId());
     });
   }
 }

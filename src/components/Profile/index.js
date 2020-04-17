@@ -3,7 +3,6 @@ import { Typography, Paper, Avatar } from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
 import SearchBar from "../SearchBar";
 import ContentList from "../ContentList";
-import HeadBar from "../HeadBar";
 import ModalButton from "../ModalButton";
 import FloatingButton from "../FloatingButton";
 import PersonIcon from "@material-ui/icons/Person";
@@ -162,7 +161,6 @@ function Profile(props) {
 
   return (
     <main className={classes.main}>
-      <HeadBar isUserLoggedIn={isUserLoggedIn} />
       <Paper className={classes.paper}>
         {profilePicture !== "" ? (
           <Avatar alt="profile" src={profilePicture} className={props.large} />

@@ -34,6 +34,7 @@ function HeadBar(props) {
   async function logout() {
     await firebase.logout();
     props.history.push("/");
+    window.location.reload(true);
   }
 
   return (

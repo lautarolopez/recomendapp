@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import "./styles.css";
 import {
   Input,
   InputLabel,
@@ -65,7 +64,7 @@ function SearchBar(props) {
             />
           </FormControl>
         </form>
-        {querySearch.length !== 0 ? (
+        {querySearch.length !== 0 &&
           searchResults.map((item) => (
             <ListItem
               key={item.id}
@@ -95,10 +94,7 @@ function SearchBar(props) {
                 )}
               />
             </ListItem>
-          ))
-        ) : (
-          <p className="noVisible">No buscaste nada cruck</p>
-        )}
+          ))}
       </List>
     </>
   );

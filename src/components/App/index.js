@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./styles.css";
-import HomePage from "../HomePage";
 import Login from "../Login";
 import Register from "../Register";
 import Profile from "../Profile";
+import HomePage from "../HomePage";
+import Layout from "../Layout";
 import Recommendations from "../Recommendations";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import { purple } from "@material-ui/core/colors/purple";
@@ -30,21 +31,23 @@ export default function App() {
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
       <Router>
-        <Switch>
-          <Route exact path="/" component={HomePage} />
-          <Route exact path="/ingresar" component={Login} />
-          <Route exact path="/registrarse" component={Register} />
-          <Route
-            exact
-            path="/mis-recomendaciones"
-            component={Recommendations}
-          />
-          <Route exact path="/perfil/:id" component={Profile} />
-        </Switch>
+        <Layout>
+          <Switch>
+            <Route exact path="/" component={HomePage} />
+            <Route exact path="/ingresar" component={Login} />
+            <Route exact path="/registrarse" component={Register} />
+            <Route
+              exact
+              path="/mis-recomendaciones"
+              component={Recommendations}
+            />
+            <Route exact path="/perfil/:id" component={Profile} />
+          </Switch>
+        </Layout>
       </Router>
     </MuiThemeProvider>
   ) : (
-    <div id="loader">
+    <div id="loader" className="loader">
       <CircularProgress />
     </div>
   );

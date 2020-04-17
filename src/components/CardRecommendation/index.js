@@ -1,73 +1,99 @@
 import React from "react";
 import {
   Card,
-  CardHeader,
   CardContent,
   CardActions,
   Button,
-  Divider,
   Typography,
   Avatar,
+  Chip,
 } from "@material-ui/core";
 import ReadMoreReact from "read-more-react";
 import PersonIcon from "@material-ui/icons/Person";
 import withStyles from "@material-ui/core/styles/withStyles";
-import firebase from "../firebase";
 import { withRouter } from "react-router-dom";
 
 const styles = (theme) => ({
-  main: {
-    width: "auto",
-    display: "block", // Fix IE 11 issue.
-    marginLeft: theme.spacing() * 3,
-    marginRight: theme.spacing() * 3,
-    [theme.breakpoints.up(400 + theme.spacing() * 3 * 2)]: {
-      width: 400,
-      marginLeft: "auto",
-      marginRight: "auto",
-    },
-  },
-  title: {
-    paddingBottom: 0,
-  },
   card: {
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
     [theme.breakpoints.up(800)]: {
-      flexDirection: "row",
-      maxWidth: "450px",
+      height: "400px",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
     },
   },
   cardImage: {
     width: "60%",
-    marginTop: "15px",
-    [theme.breakpoints.up(800)]: {
-      width: "35%",
-      margin: "15px 0 auto 16px",
+    margin: "25px auto",
+    [theme.breakpoints.up(500)]: {
+      width: "20%",
+      margin: 0,
+      padding: "0 10px",
     },
   },
   cardContent: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-  },
-  contentContainer: {
-    paddingTop: "5px",
-  },
-  buttons: {
-    marginTop: "15px",
-    display: "flex",
-    flexDirection: "column",
-    aliginItems: "center",
+    [theme.breakpoints.up(500)]: {
+      flexDirection: "row",
+    },
   },
   button: {
     marginTop: "10px",
   },
-  userRecommending: {
+  userContent: {
+    marginTop: "10px",
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    [theme.breakpoints.up(500)]: {
+      width: "40%",
+      padding: "0 10px",
+    },
+  },
+  itemContent: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    marginBotton: "10px",
+    borderBottom: "solid 1.5px lightgray",
+    [theme.breakpoints.up(500)]: {
+      width: "40%",
+      padding: "0 10px",
+      borderBottom: "none",
+    },
+    "& div.display-text-group": {
+      overflow: "scroll",
+      maxHeight: "160px",
+    },
+  },
+  netflix: {
+    width: "35px",
+    height: "35px",
+    margin: "5px",
+  },
+  netflixMessage: {
+    margin: "15px auto",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  titleChip: {
+    maxWidth: "30%",
+    marginBottom: "15px",
+    "& span": {
+      overflow: "visible",
+    },
+  },
+  divider: {
+    display: "none",
+    [theme.breakpoints.up(500)]: {
+      display: "block",
+      width: "1.5px",
+      height: "250px",
+      backgroundColor: "lightgray",
+    },
   },
 });
 
@@ -76,18 +102,27 @@ function CardRecommendation(props) {
 
   return (
     <Card variant="outlined" className={classes.card}>
-      <img
-        src={
-          props.poster_path !== null
-            ? "https://image.tmdb.org/t/p/w500" + props.poster_path
-            : "https://www.themoviedb.org/assets/2/v4/logos/208x226-stacked-green-9484383bd9853615c113f020def5cbe27f6d08a84ff834f41371f223ebad4a3c.png"
-        }
-        alt={props.title}
-        className={classes.cardImage}
-      />
-      <div className={classes.cardContent}>
-        <CardHeader title={props.title} className={classes.title}></CardHeader>
-        <CardContent className={classes.contentContainer}>
+      <CardContent className={classes.cardContent}>
+        <img
+          src={
+            props.poster_path !== null
+              ? "https://image.tmdb.org/t/p/w500" + props.poster_path
+              : "https://www.themoviedb.org/assets/2/v4/logos/208x226-stacked-green-9484383bd9853615c113f020def5cbe27f6d08a84ff834f41371f223ebad4a3c.png"
+          }
+          alt={props.title}
+          className={classes.cardImage}
+        />
+        <section className={classes.itemContent}>
+          <Typography component="h2" variant="h5" align="center">
+            {props.title}
+          </Typography>
+          <Chip
+            variant="outlined"
+            color="primary"
+            label={props.itemType === "movie" ? "Peli" : "Serie"}
+            size="small"
+            className={classes.titleChip}
+          />
           <ReadMoreReact
             text={props.overview}
             min={100}
@@ -95,35 +130,44 @@ function CardRecommendation(props) {
             max={450}
             readMoreText={"ver más"}
           />
-          <br />
-          <Divider variant="middle" />
-          <br />
-          <section className={classes.userRecommending}>
-            {props.user_poster !== "" ? (
-              <Avatar
-                alt="profile"
-                src={props.user_poster}
-                className={classes.large}
+          {props.isOnNetflix === "si" && (
+            <span className={classes.netflixMessage}>
+              <Typography component="p">{"La podés ver en "}</Typography>
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/75/Netflix_icon.svg/1200px-Netflix_icon.svg.png"
+                alt="Netflix icon"
+                className={classes.netflix}
               />
-            ) : (
-              <Avatar>
-                <PersonIcon />
-              </Avatar>
-            )}
-            <Typography component="h1" variant="h5" align="center">
-              {props.user_name}
-            </Typography>
-            <Typography component="p">{props.message}</Typography>
-          </section>
-          <CardActions className={classes.buttons}>
-            <Button
-              variant="outlined"
-              className={classes.button}
-              color="primary"
-              onClick={removeFromList}
-            >
-              Agregar a mi lista
-            </Button>
+            </span>
+          )}
+          <br />
+        </section>
+        <div className={classes.divider}></div>
+        <br />
+        <section className={classes.userContent}>
+          {props.user_poster !== "" ? (
+            <Avatar
+              alt="profile"
+              src={props.user_poster}
+              className={classes.large}
+            />
+          ) : (
+            <Avatar>
+              <PersonIcon />
+            </Avatar>
+          )}
+          <Typography component="h2" variant="h5" align="center">
+            {props.user_name}
+          </Typography>
+          <ReadMoreReact
+            className={classes.movieOverview}
+            text={props.message}
+            min={100}
+            ideal={200}
+            max={400}
+            readMoreText={"ver más"}
+          />
+          <CardActions>
             <Button
               variant="outlined"
               className={classes.button}
@@ -133,14 +177,13 @@ function CardRecommendation(props) {
               Eliminar
             </Button>
           </CardActions>
-        </CardContent>
-      </div>
+        </section>
+      </CardContent>
     </Card>
   );
 
   function removeFromList(e) {
     e.preventDefault();
-    firebase.removeItemFromList(props.id);
     props.onDeleteFromView(props.id);
   }
 }

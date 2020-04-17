@@ -1,5 +1,4 @@
 import React from "react";
-import "./styles.css";
 import {
   Card,
   CardHeader,
@@ -48,6 +47,10 @@ const styles = (theme) => ({
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    "& div.display-text-group": {
+      overflow: "scroll",
+      maxHeight: "160px",
+    },
   },
   contentContainer: {
     paddingTop: "5px",
