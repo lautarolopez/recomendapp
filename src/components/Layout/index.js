@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Container } from "@material-ui/core";
-import HeadBar from "../HeadBar";
 import Footer from "../Footer";
-import firebase from "../firebase";
 import { withRouter } from "react-router-dom";
 
 const styles = (theme) => ({
@@ -24,17 +22,9 @@ const styles = (theme) => ({
 function Layout(props) {
   const { classes } = props;
   const { children } = props;
-  const [isUserLoggedIn, setUserLoggedIn] = useState(true);
-
-  useEffect(() => {
-    if (!firebase.getCurrentUsername()) {
-      setUserLoggedIn(false);
-    }
-  }, []);
 
   return (
     <Container className={classes.container}>
-      <HeadBar isUserLoggedIn={isUserLoggedIn} />
       <Container className={classes.content}>{children}</Container>
       <Footer />
     </Container>

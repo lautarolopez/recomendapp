@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import { Typography, Paper } from "@material-ui/core";
+import HeadBar from "../HeadBar";
 import withStyles from "@material-ui/core/styles/withStyles";
 import firebase from "../firebase";
 
@@ -58,6 +59,7 @@ function HomePage(props) {
 
   return (
     <main className={classes.main}>
+      <HeadBar isUserLoggedIn={false} />
       <Paper className={classes.paper}>
         <Typography component="h1" variant="h3" className={classes.title}>
           <div className={classes.logo}>R</div>

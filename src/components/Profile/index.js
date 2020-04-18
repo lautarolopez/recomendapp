@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Typography, Paper, Avatar } from "@material-ui/core";
 import { ToggleButton, ToggleButtonGroup } from "@material-ui/lab";
+import HeadBar from "../HeadBar";
 import SearchBar from "../SearchBar";
 import ContentList from "../ContentList";
 import ModalButton from "../ModalButton";
@@ -184,6 +185,7 @@ function Profile(props) {
 
   return (
     <main className={classes.main}>
+      <HeadBar isUserLoggedIn={isUserLoggedIn} />
       <Paper className={classes.paper}>
         {profilePicture !== "" ? (
           <Avatar alt="profile" src={profilePicture} className={props.large} />
@@ -193,7 +195,7 @@ function Profile(props) {
           </Avatar>
         )}
         <Typography component="h1" variant="h5" align="center">
-          {profileName !== "" ? profileName : "User"}
+          {profileName !== "" ? profileName : "Usuario"}
         </Typography>
         {isUserLoggedIn &&
         firebase.getCurrentUserId() === props.match.params.id ? (

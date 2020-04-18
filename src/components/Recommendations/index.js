@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import CardRecommendation from "../CardRecommendation";
+import HeadBar from "../HeadBar";
 import { List, ListItem, Typography } from "@material-ui/core";
 import firebase from "../firebase";
 import { withRouter } from "react-router-dom";
@@ -50,7 +51,7 @@ function Recommendations(props) {
   //eslint-disable-next-line
   useEffect(() => {
     if (!firebase.getCurrentUsername()) {
-      props.history.replace("/perfil/" + firebase.getCurrentUserId());
+      props.history.replace("/");
     }
     firebase.userRecommendations().then((aux) => {
       setProfileRecommendations(aux);
@@ -60,6 +61,7 @@ function Recommendations(props) {
 
   return (
     <main className={classes.main}>
+      <HeadBar isUserLoggedIn={true} />
       <br />
       <Typography component="h1" variant="h6" align="center">
         Mis recomendaciones
