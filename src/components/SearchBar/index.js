@@ -106,7 +106,7 @@ function SearchBar(props) {
   async function search() {
     if (querySearch.length !== 0) {
       await fetch(
-        `https://api.themoviedb.org/3/search/multi?api_key=8acf7117c6859db295df155d5626c31a&query=${querySearch}&language=es-AR&include_image_language=es-AR`
+        `https://api.themoviedb.org/3/search/multi?api_key=${process.env.REACT_APP_API_KEY_TMDB}&query=${querySearch}&language=es-AR&include_image_language=es-AR`
       )
         .then(function (response) {
           return response.json();

@@ -56,7 +56,7 @@ function Profile(props) {
   async function fetchId(id, type) {
     let aux;
     await fetch(
-      `https://api.themoviedb.org/3/${type}/${id}?api_key=8acf7117c6859db295df155d5626c31a&language=es-AR&include_image_language=es-AR`
+      `https://api.themoviedb.org/3/${type}/${id}?api_key=${process.env.REACT_APP_API_KEY_TMDB}&language=es-AR&include_image_language=es-AR`
     )
       .then(function (response) {
         return response.json();
