@@ -4,13 +4,14 @@ import withStyles from "@material-ui/core/styles/withStyles";
 
 const styles = (theme) => ({
   footer: {
+    textAlign: "center",
     position: "relative",
     bottom: 0,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     width: "100%",
-    height: "35px",
+    height: "50px",
     color: "white",
     backgroundColor: theme.palette.primary.dark,
     "& a": {

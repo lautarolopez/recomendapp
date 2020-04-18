@@ -37,7 +37,7 @@ const styles = (theme) => ({
   },
   appDescription: {
     width: "30%",
-    minWidth: "350px",
+    minWidth: "250px",
     color: "white",
     textAlign: "center",
     margin: "25px auto",
