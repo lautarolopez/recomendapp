@@ -201,7 +201,7 @@ function Profile(props) {
         firebase.getCurrentUserId() === props.match.params.id ? (
           <SearchBar dataFetcher={dataFetcher} store={true} />
         ) : (
-          <ModalButton profileId={props.match.params.id} />
+          isUserLoggedIn && <ModalButton profileId={props.match.params.id} />
         )}
         <br />
         {dataFetched ? (
