@@ -54,6 +54,7 @@ function Profile(props) {
   };
 
   async function fetchId(id, type) {
+    let aux;
     await fetch(
       `https://api.themoviedb.org/3/${type}/${id}?api_key=8acf7117c6859db295df155d5626c31a&language=es-AR&include_image_language=es-AR`
     )
@@ -62,19 +63,32 @@ function Profile(props) {
       })
       .then(function (data) {
         if (type === "movie" && !profileMovies.includes(data)) {
-          let aux = profileMovies;
-          aux.push(data);
-          setProfileMovies(aux);
+          aux = data;
         } else if (!profileSeries.includes(data)) {
-          let aux = profileSeries;
-          aux.push(data);
-          setProfileSeries(aux);
+          aux = data;
         }
       })
       .catch(function (err) {
         console.log(err);
       });
+    return aux;
   }
+
+  const dataFetcher = (id, type) => {
+    setDataFetched(false);
+    let auxMovies = [...profileMovies];
+    let auxSeries = [...profileSeries];
+    fetchId(id, type).then((item) => {
+      if (type === "movie") {
+        auxMovies.push(item);
+        setProfileMovies(auxMovies);
+      } else {
+        auxSeries.push(item);
+        setProfileSeries(auxSeries);
+      }
+    });
+    setDataFetched(true);
+  };
 
   function deleteFromView(id) {
     let aux;
@@ -92,16 +106,23 @@ function Profile(props) {
   }
 
   async function fetchItemsData(moviesList, seriesList) {
+    let auxMovies = [];
+    let auxSeries = [];
     if (moviesList.length !== 0) {
       moviesList.forEach((movie_id) => {
-        fetchId(movie_id, "movie");
+        fetchId(movie_id, "movie").then((movie) => {
+          auxMovies.push(movie);
+        });
       });
     }
     if (seriesList.length !== 0) {
       seriesList.forEach((serie_id) => {
-        fetchId(serie_id, "tv");
+        fetchId(serie_id, "tv").then((serie) => {
+          auxSeries.push(serie);
+        });
       });
     }
+    return { movies: auxMovies, series: auxSeries };
   }
 
   function deleteRepeatedItems() {
@@ -143,21 +164,23 @@ function Profile(props) {
       setUserLoggedIn(false);
     }
     firebase.getUserLists(props.match.params.id).then((lists) => {
-      if (!dataFetched) {
-        fetchItemsData(lists.movies, lists.series);
-        firebase.getUserAvatarWithId(props.match.params.id).then((photoURL) => {
-          setProfilePicture(photoURL);
+      fetchItemsData(lists.movies, lists.series).then((listsFetched) => {
+        setProfileMovies(listsFetched.movies);
+        setProfileSeries(listsFetched.series);
+      });
+      firebase.getUserAvatarWithId(props.match.params.id).then((photoURL) => {
+        setProfilePicture(photoURL);
+      });
+      firebase
+        .getUserDisplayNameWithId(props.match.params.id)
+        .then((displayName) => {
+          setProfileName(displayName);
         });
-        firebase
-          .getUserDisplayNameWithId(props.match.params.id)
-          .then((displayName) => {
-            setProfileName(displayName);
-          });
-      }
     });
     setDataFetched(true);
     deleteRepeatedItems();
-  });
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <main className={classes.main}>
@@ -174,7 +197,7 @@ function Profile(props) {
         </Typography>
         {isUserLoggedIn &&
         firebase.getCurrentUserId() === props.match.params.id ? (
-          <SearchBar dataFetcher={fetchId} store={true} />
+          <SearchBar dataFetcher={dataFetcher} store={true} />
         ) : (
           <ModalButton profileId={props.match.params.id} />
         )}

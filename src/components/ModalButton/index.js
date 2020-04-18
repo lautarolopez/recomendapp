@@ -70,6 +70,7 @@ function ModalButton(props) {
   const handleClose = () => {
     setOpen(false);
     setRecommendedItem({});
+    setMessage("");
     setItemError(false);
     setMessageError(false);
   };

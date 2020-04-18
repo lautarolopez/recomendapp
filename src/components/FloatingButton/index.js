@@ -33,8 +33,15 @@ function FloatingButton(props) {
 
   return (
     <CopyToClipboard text={window.location.href}>
-      <Fab size="medium" color="primary" className={classes.floatFab}>
-        <ShareIcon onClick={handleClick}></ShareIcon>
+      <div>
+        <Fab
+          size="medium"
+          color="primary"
+          className={classes.floatFab}
+          onClick={handleClick}
+        >
+          <ShareIcon></ShareIcon>
+        </Fab>
         <Popover
           id={id}
           open={open}
@@ -51,7 +58,7 @@ function FloatingButton(props) {
         >
           <Typography component="p">Copiado al portapapeles.</Typography>
         </Popover>
-      </Fab>
+      </div>
     </CopyToClipboard>
   );
 }

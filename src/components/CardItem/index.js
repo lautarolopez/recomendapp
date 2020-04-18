@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Card,
   CardHeader,
   CardContent,
   CardActions,
   Button,
+  Popover,
+  Typography,
 } from "@material-ui/core";
 import ReadMoreReact from "read-more-react";
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -63,6 +65,14 @@ const styles = (theme) => ({
 
 function CardItem(props) {
   const { classes } = props;
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
   return (
     <Card variant="outlined" className={classes.card}>
       <img
@@ -95,9 +105,31 @@ function CardItem(props) {
                   Quitar de mi lista
                 </Button>
               ) : (
-                <Button variant="outlined" color="primary" onClick={addToList}>
-                  Agregar a mi lista
-                </Button>
+                <div>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={addToList}
+                  >
+                    Agregar a mi lista
+                  </Button>
+                  <Popover
+                    id={id}
+                    open={open}
+                    anchorEl={anchorEl}
+                    onClose={handleClose}
+                    anchorOrigin={{
+                      vertical: "bottom",
+                      horizontal: "center",
+                    }}
+                    transformOrigin={{
+                      vertical: "top",
+                      horizontal: "center",
+                    }}
+                  >
+                    <Typography component="p">Agregada a tu perfil</Typography>
+                  </Popover>
+                </div>
               ))}
           </CardActions>
         </CardContent>
@@ -106,7 +138,7 @@ function CardItem(props) {
   );
 
   function addToList(e) {
-    e.preventDefault();
+    setAnchorEl(e.currentTarget);
     firebase.storeNewItemWithId(props.id, props.itemType);
   }
 

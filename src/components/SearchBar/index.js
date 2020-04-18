@@ -17,6 +17,9 @@ const styles = (theme) => ({
   listItem: {
     height: "12vh",
   },
+  listImage: {
+    width: "45px",
+  },
 });
 
 function SearchBar(props) {
@@ -85,6 +88,7 @@ function SearchBar(props) {
                     : "https://www.themoviedb.org/assets/2/v4/logos/208x226-stacked-green-9484383bd9853615c113f020def5cbe27f6d08a84ff834f41371f223ebad4a3c.png"
                 }
                 alt={item.title}
+                className={classes.listImage}
               />
               <ListItemText
                 inset

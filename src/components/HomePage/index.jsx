@@ -36,9 +36,12 @@ const styles = (theme) => ({
     color: "white",
   },
   appDescription: {
+    width: "30%",
+    minWidth: "350px",
     color: "white",
     textAlign: "center",
     margin: "25px auto",
+    fontSize: "20px",
   },
 });
 
